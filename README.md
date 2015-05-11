@@ -1,2 +1,2 @@
 # tictactoe-gui.rb
-![](https://travis-ci.org/demonh3x/tictactoe-gui.rb.svg?branch=master)
+![](https://travis-ci.org/demonh3x/tictactoe-gui.rb.svg?branch=master)[![Code Climate](https://codeclimate.com/github/demonh3x/tictactoe-gui.rb/badges/gpa.svg)](https://codeclimate.com/github/demonh3x/tictactoe-gui.rb)[![Test Coverage](https://codeclimate.com/github/demonh3x/tictactoe-gui.rb/badges/coverage.svg)](https://codeclimate.com/github/demonh3x/tictactoe-gui.rb/coverage)
