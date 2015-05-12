@@ -23,7 +23,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.games.first
+    game = app.game
 
     click_cell(game, 0) #x
     click_cell(game, 3) #o
@@ -41,7 +41,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.games.first
+    game = app.game
 
     click_cell(game, 0) #x
     click_cell(game, 4) #o
@@ -61,7 +61,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_computer").click
     find(app.menu, "o_computer").click
     find(app.menu, "start").click
-    game = app.games.first
+    game = app.game
 
     8.times do
       tick(game)

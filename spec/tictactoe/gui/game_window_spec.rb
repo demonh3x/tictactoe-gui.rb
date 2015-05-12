@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'tictactoe/gui/main_window'
+require 'tictactoe/gui/game_window'
 
-RSpec.describe Tictactoe::Gui::MainWindow, :integration => true, :gui => true do
+RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   before(:each) do
     Qt::Application.new(ARGV)
   end

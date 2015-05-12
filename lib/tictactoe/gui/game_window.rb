@@ -2,7 +2,7 @@ require 'Qt'
 
 module Tictactoe
   module Gui
-    class MainWindow < Qt::Widget
+    class GameWindow < Qt::Widget
       def initialize(tictactoe, side_size)
         @dimensions = 2
         @side_size = side_size
