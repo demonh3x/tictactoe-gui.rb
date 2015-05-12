@@ -6,8 +6,9 @@ module Tictactoe
       def initialize(tictactoe, side_size, on_final_selection)
         super(nil)
 
-        @dimensions = 2
-        @side_size = side_size
+        @factory = QtUi.new(self) #SMELL: self should not be passed to factory
+        @window = @factory.create_window
+
         @ttt = tictactoe
         @on_final_selection = on_final_selection
         @moves = Moves.new
@@ -15,9 +16,9 @@ module Tictactoe
         self.object_name = "main_window"
         self.resize(240, 340)
 
-        @main_layout = main_layout
-        @cells = create_cells
-        @main_layout.add_layout(layout_board(@cells), 0, 0, 1, 1)
+        @main_layout = @window.main_layout
+        @board = @factory.create_board(side_size * side_size, method(:on_move))
+        @main_layout.add_layout(@board.layout, 0, 0, 1, 1)
         @result = widget_result
         @main_layout.add_widget(@result, 1, 0, 1, 1)
         @main_layout.add_layout(layout_play_again, 2, 0, 1, 1)
@@ -32,39 +33,9 @@ module Tictactoe
       end
 
       private
-      def main_layout
-        main_layout = Qt::GridLayout.new(self)
-        main_layout.object_name = "main_layout"
-        main_layout
-      end
 
-      def create_cells
-        cell_count = @side_size ** @dimensions
-        (0..cell_count-1).map {|move| Cell.new(self, move)}
-      end
-
-      def layout_board(cells)
-        board_layout = Qt::GridLayout.new()
-        board_layout.object_name = "board_layout"
-
-        expanding_policy = Qt::SizePolicy.new(Qt::SizePolicy::Expanding, Qt::SizePolicy::Expanding)
-
-        coordinates_sequence = (0..@side_size-1).to_a.repeated_permutation(@dimensions)
-        cells.each do |cell|
-          coordinates = coordinates_sequence.next
-          x = coordinates[0]
-          y = coordinates[1]
-          board_layout.add_widget(cell, x, y, 1, 1)
-          cell.size_policy = expanding_policy
-          Qt::Object.connect(cell, SIGNAL('clicked()'), self, SLOT("cell_clicked()"))
-        end
-
-        board_layout
-      end
-
-      slots :cell_clicked
-      def cell_clicked
-        make_move(sender.move)
+      def on_move(move)
+        make_move(move)
         refresh_board
         refresh_result
       end
@@ -75,12 +46,7 @@ module Tictactoe
       end
 
       def refresh_board
-        marks = @ttt.marks
-
-        @cells.each_with_index do |cell, index|
-          mark = marks[index]
-          cell.text = mark.to_s
-        end
+        @board.update(@ttt.marks)
       end
 
       def refresh_result
@@ -163,16 +129,96 @@ module Tictactoe
       end
     end
 
-    class Cell < Qt::PushButton
-      def initialize(parent, move)
-        super(parent)
-        @move = move
+    class QtUi
+      class Cell < Qt::PushButton
+        def initialize(parent, move)
+          super(parent)
+          @move = move
 
-        i = move.to_s
-        self.objectName = "cell_#{i}"
+          i = move.to_s
+          self.objectName = "cell_#{i}"
+        end
+
+        attr_reader :move
       end
 
-      attr_reader :move
+      class Board
+        attr_reader :layout
+
+        def initialize(parent, cell_count, on_move)
+          @parent = parent
+          @cell_count = cell_count
+          @on_move = on_move
+
+          @cells = create_cells
+          @layout = layout_board(@cells)
+        end
+
+        def update(marks)
+          @cells.zip(marks) do |cell, mark|
+            cell.text = mark.to_s
+          end
+        end
+
+        private
+        def create_cells
+          (0..@cell_count-1).map do |move|
+            Cell.new(@parent, move)
+          end
+        end
+
+        def layout_board(cells)
+          board_layout = Qt::GridLayout.new()
+          board_layout.object_name = "board_layout"
+
+          expanding_policy = Qt::SizePolicy.new(Qt::SizePolicy::Expanding, Qt::SizePolicy::Expanding)
+
+          side_size = Math.sqrt(@cell_count)
+          coordinates_sequence = (0..side_size-1).to_a.repeated_permutation(2)
+          cells.zip(coordinates_sequence) do |cell, coordinates|
+            x,y = coordinates
+
+            board_layout.add_widget(cell, x, y, 1, 1)
+
+            cell.size_policy = expanding_policy
+            cell.connect(SIGNAL :clicked) do 
+              @on_move.call(cell.move)
+            end
+          end
+
+          board_layout
+        end
+      end
+
+      class Window 
+        attr_reader :main_layout
+
+        def initialize(parent)
+          @parent = parent
+          @main_layout = create_main_layout
+        end
+
+        def create_main_layout
+          main_layout = Qt::GridLayout.new(@parent)
+          main_layout.object_name = "main_layout"
+          main_layout
+        end
+      end
+
+      def initialize(parent)
+        @parent = parent
+      end
+
+      def create_board(cell_count, on_move)
+        Board.new(@parent, cell_count, on_move) 
+      end
+
+      def create_window()
+        Window.new(@parent)
+      end
+
+      def join(parent, child)
+      end
     end
   end
 end
