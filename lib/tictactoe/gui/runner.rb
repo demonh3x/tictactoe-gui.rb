@@ -13,6 +13,7 @@ module Tictactoe
         @app = Qt::Application.new(ARGV)
         @games = []
         @menu = MenuWindow.new(lambda{|options|
+          @menu.hide
           ttt = Game.new
           ttt.set_board_size(options[:board])
           ttt.set_player_x(options[:x])
