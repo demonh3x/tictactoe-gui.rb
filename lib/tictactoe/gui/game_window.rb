@@ -73,11 +73,6 @@ module Tictactoe
         refresh_result
       end
 
-      slots :start
-      def start
-        @timer.start
-      end
-
       slots :cell_clicked
       def cell_clicked
         make_move(sender.move)
