@@ -3,11 +3,12 @@ require 'Qt'
 module Tictactoe
   module Gui
     class GameWindow < Qt::Widget
-      def initialize(tictactoe, side_size)
+      def initialize(tictactoe, side_size, on_final_selection)
         @dimensions = 2
         @side_size = side_size
 
         @ttt = tictactoe
+        @on_final_selection = on_final_selection
 
         @moves = Moves.new
 
@@ -17,13 +18,19 @@ module Tictactoe
         setup_cells
         setup_board
         setup_result
+        setup_play_again
         setup_timer
+      end
+
+      def close
+        @timer.stop
+        super
       end
 
       private
       def setup_window
         self.object_name = "main_window"
-        self.resize(240, 220)
+        self.resize(240, 340)
 
         @main_layout = Qt::GridLayout.new(self)
         @main_layout.object_name = "main_layout"
@@ -59,6 +66,34 @@ module Tictactoe
         @main_layout.add_widget(@result, 4, 0, 1, 1)
       end
 
+      def setup_play_again
+        @play_again_layout = create_play_again_buttons
+        @main_layout.add_layout(@play_again_layout, 5, 0, 1, 1)
+      end
+
+      def create_play_again_buttons
+        buttons = Qt::GridLayout.new()
+        buttons.add_widget(create_play_again_button, 1, 0, 1, 1)
+        buttons.add_widget(create_close_button, 1, 1, 1, 1)
+        buttons
+      end
+
+      def create_play_again_button
+        play_again = Qt::PushButton.new(self)
+        play_again.object_name = "play_again"
+        play_again.text = "Play again"
+        Qt::Object.connect(play_again, SIGNAL('clicked()'), self, SLOT("on_play_again()"))
+        play_again
+      end
+
+      def create_close_button
+        close = Qt::PushButton.new(self)
+        close.object_name = "close"
+        close.text = "Close"
+        Qt::Object.connect(close, SIGNAL('clicked()'), self, SLOT("on_close()"))
+        close
+      end
+
       def setup_timer
         @timer = Qt::Timer.new(self)
         @timer.object_name = 'timer'
@@ -78,6 +113,16 @@ module Tictactoe
         make_move(sender.move)
         refresh_board
         refresh_result
+      end
+
+      slots :on_play_again
+      def on_play_again
+        @on_final_selection.call(self, :play_again)
+      end
+
+      slots :on_close
+      def on_close
+        @on_final_selection.call(self, :close)
       end
 
       def make_move(move)

@@ -10,13 +10,19 @@ module Tictactoe
 
       def initialize()
         @app = Qt::Application.new(ARGV)
-        @menu = MenuWindow.new(lambda{|options|
-          @menu.hide
-          ttt = Game.new
-          ttt.set_board_size(options[:board])
-          ttt.set_player_x(options[:x])
-          ttt.set_player_o(options[:o])
-          @game = GameWindow.new(ttt, options[:board])
+        @menu = MenuWindow.new(lambda{|menu, options|
+          menu.hide
+
+          on_end_selection = lambda{|game, selection|
+            game.close
+            menu.show if selection == :play_again
+          }
+
+          @game = GameWindow.new(
+            create_game(options),
+            options[:board],
+            on_end_selection
+          )
           @game.show
         })
       end
@@ -24,6 +30,15 @@ module Tictactoe
       def run
         menu.show
         app.exec
+      end
+
+      private
+      def create_game(options)
+        ttt = Game.new
+        ttt.set_board_size(options[:board])
+        ttt.set_player_x(options[:x])
+        ttt.set_player_o(options[:o])
+        ttt
       end
     end
   end

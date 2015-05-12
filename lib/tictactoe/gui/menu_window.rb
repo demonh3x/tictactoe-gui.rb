@@ -107,7 +107,7 @@ module Tictactoe
 
       slots :start_game
       def start_game
-        @start_callback.call(@options)
+        @start_callback.call(self, @options)
       end
     end
   end
