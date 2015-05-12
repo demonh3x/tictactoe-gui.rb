@@ -16,11 +16,11 @@ module Tictactoe
         self.object_name = "main_window"
         self.resize(240, 340)
 
-        @main_layout = @window.main_layout
+        @main_layout = @window.layout
         @board = @factory.create_board(side_size * side_size, method(:on_move))
-        @main_layout.add_layout(@board.layout, 0, 0, 1, 1)
-        @result = widget_result
-        @main_layout.add_widget(@result, 1, 0, 1, 1)
+        @factory.join(@window, @board)
+        @result = @factory.create_result()
+        @factory.join(@window, @result)
         @main_layout.add_layout(layout_play_again, 2, 0, 1, 1)
 
         @timer = timer
@@ -61,11 +61,6 @@ module Tictactoe
         end
       end
 
-      def widget_result
-        result = Qt::Label.new(self)
-        result.object_name = "result"
-        result
-      end
 
       def layout_play_again
         buttons = Qt::GridLayout.new()
@@ -190,12 +185,39 @@ module Tictactoe
         end
       end
 
-      class Window 
-        attr_reader :main_layout
+      class Result
+        attr_reader :layout
 
         def initialize(parent)
           @parent = parent
-          @main_layout = create_main_layout
+          @widget = create_widget
+          @layout = create_layout(@widget)
+        end
+
+        def text=(text)
+          @widget.text = text
+        end
+
+        private
+        def create_layout(widget)
+          layout = Qt::GridLayout.new()
+          layout.add_widget(widget, 0, 0, 1, 1)
+          layout
+        end
+
+        def create_widget
+          result = Qt::Label.new(@parent)
+          result.object_name = "result"
+          result
+        end
+      end
+
+      class Window 
+        attr_reader :layout
+
+        def initialize(parent)
+          @parent = parent
+          @layout = create_main_layout
         end
 
         def create_main_layout
@@ -207,6 +229,7 @@ module Tictactoe
 
       def initialize(parent)
         @parent = parent
+        @row = 0
       end
 
       def create_board(cell_count, on_move)
@@ -217,7 +240,13 @@ module Tictactoe
         Window.new(@parent)
       end
 
+      def create_result()
+        Result.new(@parent)
+      end
+
       def join(parent, child)
+        parent.layout.add_layout(child.layout, @row, 0, 1, 1)
+        @row += 1
       end
     end
   end
