@@ -21,7 +21,8 @@ module Tictactoe
         @factory.join(@window, @board)
         @result = @factory.create_result()
         @factory.join(@window, @result)
-        @main_layout.add_layout(layout_play_again, 2, 0, 1, 1)
+        pa = @factory.create_play_again(@on_final_selection)
+        @factory.join(@window, pa)
 
         @timer = timer
         @timer.start
@@ -61,33 +62,6 @@ module Tictactoe
         end
       end
 
-
-      def layout_play_again
-        buttons = Qt::GridLayout.new()
-        buttons.add_widget(button_play_again, 1, 0, 1, 1)
-        buttons.add_widget(button_close, 1, 1, 1, 1)
-        buttons
-      end
-
-      def button_play_again
-        play_again = Qt::PushButton.new(self)
-        play_again.object_name = "play_again"
-        play_again.text = "Play again"
-        play_again.connect(SIGNAL :clicked) do 
-          @on_final_selection.call(self, :play_again)
-        end
-        play_again
-      end
-
-      def button_close
-        close = Qt::PushButton.new(self)
-        close.object_name = "close"
-        close.text = "Close"
-        close.connect(SIGNAL :clicked) do 
-          @on_final_selection.call(self, :close)
-        end
-        close
-      end
 
       def timer
         timer = Qt::Timer.new(self)
@@ -207,6 +181,44 @@ module Tictactoe
         end
       end
 
+      class PlayAgain
+        attr_reader :layout
+
+        def initialize(parent, on_select)
+          @parent = parent
+          @on_final_selection = on_select
+          @layout = layout_play_again
+        end
+
+        private
+        def layout_play_again
+          buttons = Qt::GridLayout.new()
+          buttons.add_widget(button_play_again, 1, 0, 1, 1)
+          buttons.add_widget(button_close, 1, 1, 1, 1)
+          buttons
+        end
+
+        def button_play_again
+          play_again = Qt::PushButton.new(@parent)
+          play_again.object_name = "play_again"
+          play_again.text = "Play again"
+          play_again.connect(SIGNAL :clicked) do 
+            @on_final_selection.call(@parent, :play_again)
+          end
+          play_again
+        end
+
+        def button_close
+          close = Qt::PushButton.new(@parent)
+          close.object_name = "close"
+          close.text = "Close"
+          close.connect(SIGNAL :clicked) do 
+            @on_final_selection.call(@parent, :close)
+          end
+          close
+        end
+      end
+
       class Window 
         attr_reader :layout
 
@@ -237,6 +249,10 @@ module Tictactoe
 
       def create_result()
         Result.new(@parent)
+      end
+
+      def create_play_again(on_select)
+        PlayAgain.new(@parent, on_select)
       end
 
       def join(parent, child)
