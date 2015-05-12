@@ -15,7 +15,7 @@ module Tictactoe
           ttt.set_board_size(options[:board])
           ttt.set_player_x(options[:x])
           ttt.set_player_o(options[:o])
-          @game = GameWindow.new(ttt, options[:board])
+          @game = MainWindow.new(ttt, options[:board])
           @game.show
         })
       end
