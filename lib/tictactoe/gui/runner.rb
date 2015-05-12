@@ -1,7 +1,7 @@
 require 'Qt'
 require 'tictactoe/game'
 require 'tictactoe/gui/menu_window'
-require 'tictactoe/gui/main_window'
+require 'tictactoe/gui/game_window'
 
 module Tictactoe
   module Gui
@@ -17,7 +17,7 @@ module Tictactoe
           ttt.set_board_size(options[:board])
           ttt.set_player_x(options[:x])
           ttt.set_player_o(options[:o])
-          game = MainWindow.new(ttt, options[:board])
+          game = GameWindow.new(ttt, options[:board])
           @games.push(game)
           game.show if @running
         })
