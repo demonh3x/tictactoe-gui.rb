@@ -18,11 +18,9 @@ module Tictactoe
 
         @main_layout = @window.layout
         @board = @factory.create_board(side_size * side_size, method(:on_move))
-        @factory.join(@window, @board)
         @result = @factory.create_result()
-        @factory.join(@window, @result)
         pa = @factory.create_play_again(@on_final_selection)
-        @factory.join(@window, pa)
+        @factory.join(@window, @board, @result, pa)
 
         @timer = timer
         @timer.start
@@ -236,7 +234,6 @@ module Tictactoe
 
       def initialize(parent)
         @parent = parent
-        @row = 0
       end
 
       def create_board(cell_count, on_move)
@@ -255,9 +252,10 @@ module Tictactoe
         PlayAgain.new(@parent, on_select)
       end
 
-      def join(parent, child)
-        parent.layout.add_layout(child.layout, @row, 0, 1, 1)
-        @row += 1
+      def join(parent, *children)
+        children.each_with_index do |child, row|
+          parent.layout.add_layout(child.layout, row, 0, 1, 1)
+        end
       end
     end
   end
