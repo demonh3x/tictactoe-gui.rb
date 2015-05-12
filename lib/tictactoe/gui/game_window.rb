@@ -73,36 +73,31 @@ module Tictactoe
         play_again = Qt::PushButton.new(self)
         play_again.object_name = "play_again"
         play_again.text = "Play again"
-        Qt::Object.connect(play_again, SIGNAL('clicked()'), self, SLOT("on_play_again()"))
+        play_again.connect(SIGNAL :clicked) do 
+          @on_final_selection.call(self, :play_again)
+        end
         play_again
-      end
-
-      slots :on_play_again
-      def on_play_again
-        @on_final_selection.call(self, :play_again)
       end
 
       def button_close
         close = Qt::PushButton.new(self)
         close.object_name = "close"
         close.text = "Close"
-        Qt::Object.connect(close, SIGNAL('clicked()'), self, SLOT("on_close()"))
+        close.connect(SIGNAL :clicked) do 
+          @on_final_selection.call(self, :close)
+        end
         close
-      end
-
-      slots :on_close
-      def on_close
-        @on_final_selection.call(self, :close)
       end
 
       def timer
         timer = Qt::Timer.new(self)
         timer.object_name = 'timer'
-        Qt::Object.connect(timer, SIGNAL('timeout()'), self, SLOT('tick()'))
+        timer.connect(SIGNAL :timeout) do 
+          tick()
+        end
         timer
       end
 
-      slots :tick
       def tick
         @ttt.tick(@moves)
         refresh_board
