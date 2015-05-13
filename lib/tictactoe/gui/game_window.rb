@@ -5,21 +5,23 @@ module Tictactoe
     class GameWindow
       attr_reader :qt_root
 
-      def initialize(tictactoe, side_size, on_final_selection)
-        @window = QtGui::WidgetFactory.create_window()
-        @factory = QtGui::WidgetFactory.new(@window.root)
-        @qt_root = @window.root
+      def initialize(tictactoe, side_size, on_selection)
 
         @ttt = tictactoe
         @moves = Moves.new
 
-        @main_layout = @window.layout
-        @board = @factory.create_board(side_size * side_size, method(:on_move))
-        @result = @factory.create_result()
-        play_again = @factory.create_play_again(on_final_selection)
+        @factory = QtGui::WidgetFactory.new()
+
+        @window = @factory.new_window()
+        @qt_root = @window.root
+
+        @board = @factory.new_board(side_size * side_size, method(:on_move))
+        @result = @factory.new_result()
+        play_again = @factory.new_play_again(on_selection)
         @factory.layout(@window, @board, @result, play_again)
 
-        @timer = @factory.create_timer(method(:tick))
+        @timer = @factory.new_timer(method(:tick))
+        @timer.set_parent(@window)
         @timer.start
       end
 
@@ -74,28 +76,29 @@ module Tictactoe
     end
 
     module QtGui
-      class Cell < Qt::PushButton
-        def initialize(parent, move)
-          super(parent)
-          @move = move
+      class Board
+        class Cell < Qt::PushButton
+          def initialize(parent, move)
+            super(parent)
+            @move = move
 
-          i = move.to_s
-          self.objectName = "cell_#{i}"
+            i = move.to_s
+            self.objectName = "cell_#{i}"
+          end
+
+          attr_reader :move
         end
 
-        attr_reader :move
-      end
-
-      class Board
         attr_reader :layout
 
-        def initialize(parent, cell_count, on_move)
-          @parent = parent
+        def initialize(cell_count, on_move)
           @cell_count = cell_count
           @on_move = on_move
+        end
 
-          @cells = create_cells
-          @layout = layout_board(@cells)
+        def set_parent(parent)
+          @parent = parent.root
+          init
         end
 
         def update(marks)
@@ -105,19 +108,31 @@ module Tictactoe
         end
 
         private
-        def create_cells
-          (0..@cell_count-1).map do |move|
-            Cell.new(@parent, move)
+        def init
+          cell_count = @cell_count
+          parent = @parent
+          on_move = @on_move
+
+          cells = create_cells(cell_count, parent)
+          layout = layout_board(cell_count, on_move, cells)
+
+          @cells = cells
+          @layout = layout
+        end
+
+        def create_cells(cell_count, parent)
+          (0..cell_count-1).map do |move|
+            Cell.new(parent, move)
           end
         end
 
-        def layout_board(cells)
+        def layout_board(cell_count, on_move,  cells)
           board_layout = Qt::GridLayout.new()
           board_layout.object_name = "board_layout"
 
           expanding_policy = Qt::SizePolicy.new(Qt::SizePolicy::Expanding, Qt::SizePolicy::Expanding)
 
-          side_size = Math.sqrt(@cell_count)
+          side_size = Math.sqrt(cell_count)
           coordinates_sequence = (0..side_size-1).to_a.repeated_permutation(2)
           cells.zip(coordinates_sequence) do |cell, coordinates|
             x,y = coordinates
@@ -126,7 +141,7 @@ module Tictactoe
 
             cell.size_policy = expanding_policy
             cell.connect(SIGNAL :clicked) do 
-              @on_move.call(cell.move)
+              on_move.call(cell.move)
             end
           end
 
@@ -137,10 +152,9 @@ module Tictactoe
       class Result
         attr_reader :layout
 
-        def initialize(parent)
-          @parent = parent
-          @widget = create_widget
-          @layout = create_layout(@widget)
+        def set_parent(parent)
+          @parent = parent.root
+          init
         end
 
         def text=(text)
@@ -148,14 +162,24 @@ module Tictactoe
         end
 
         private
+        def init
+          parent = @parent
+
+          widget = create_widget(parent)
+          layout = create_layout(widget)
+
+          @widget = widget
+          @layout = layout
+        end
+
         def create_layout(widget)
           layout = Qt::GridLayout.new()
           layout.add_widget(widget, 0, 0, 1, 1)
           layout
         end
 
-        def create_widget
-          result = Qt::Label.new(@parent)
+        def create_widget(parent)
+          result = Qt::Label.new(parent)
           result.object_name = "result"
           result
         end
@@ -164,36 +188,51 @@ module Tictactoe
       class PlayAgain
         attr_reader :layout
 
-        def initialize(parent, on_select)
-          @parent = parent
-          @on_final_selection = on_select
-          @layout = layout_play_again
+        def initialize(on_select)
+          @on_select = on_select
+        end
+
+        def set_parent(parent)
+          @parent = parent.root
+          init
         end
 
         private
-        def layout_play_again
+        def init
+          parent = @parent
+          on_select = @on_select
+
+          layout = layout_play_again(
+            button_play_again(parent, on_select),
+            button_close(parent, on_select),
+          )
+
+          @layout = layout
+        end
+
+        def layout_play_again(play_again, close)
           buttons = Qt::GridLayout.new()
-          buttons.add_widget(button_play_again, 1, 0, 1, 1)
-          buttons.add_widget(button_close, 1, 1, 1, 1)
+          buttons.add_widget(play_again, 1, 0, 1, 1)
+          buttons.add_widget(close, 1, 1, 1, 1)
           buttons
         end
 
-        def button_play_again
-          play_again = Qt::PushButton.new(@parent)
+        def button_play_again(parent, on_select)
+          play_again = Qt::PushButton.new(parent)
           play_again.object_name = "play_again"
           play_again.text = "Play again"
           play_again.connect(SIGNAL :clicked) do 
-            @on_final_selection.call(@parent, :play_again)
+            on_select.call(parent, :play_again)
           end
           play_again
         end
 
-        def button_close
-          close = Qt::PushButton.new(@parent)
+        def button_close(parent, on_select)
+          close = Qt::PushButton.new(parent)
           close.object_name = "close"
           close.text = "Close"
           close.connect(SIGNAL :clicked) do 
-            @on_final_selection.call(@parent, :close)
+            on_select.call(parent, :close)
           end
           close
         end
@@ -219,8 +258,13 @@ module Tictactoe
       end
 
       class Timer
-        def initialize(parent, on_timeout)
-          @timer = timer(parent, on_timeout)
+        def initialize(on_timeout)
+          @on_timeout = on_timeout
+        end
+
+        def set_parent(parent)
+          @parent = parent.root
+          init
         end
 
         def start
@@ -232,6 +276,15 @@ module Tictactoe
         end
 
         private
+        def init
+          parent = @parent
+          on_timeout = @on_timeout
+
+          timer = timer(parent, on_timeout)
+
+          @timer = timer
+        end
+
         def timer(parent, on_timeout)
           timer = Qt::Timer.new(parent)
           timer.object_name = 'timer'
@@ -243,33 +296,30 @@ module Tictactoe
       end
       
       class WidgetFactory
-        def initialize(parent)
-          @parent = parent
+        def new_board(cell_count, on_move)
+          Board.new(cell_count, on_move) 
         end
 
-        def create_board(cell_count, on_move)
-          Board.new(@parent, cell_count, on_move) 
-        end
-
-        def self.create_window
+        def new_window()
           Window.new()
         end
 
-        def create_result()
-          Result.new(@parent)
+        def new_result()
+          Result.new()
         end
 
-        def create_play_again(on_select)
-          PlayAgain.new(@parent, on_select)
+        def new_play_again(on_select)
+          PlayAgain.new(on_select)
         end
 
-        def create_timer(on_timeout)
-          Timer.new(@parent, on_timeout)
+        def new_timer(on_timeout)
+          Timer.new(on_timeout)
         end
 
-        def layout(parent, *children)
+        def layout(window, *children)
           children.each_with_index do |child, row|
-            parent.layout.add_layout(child.layout, row, 0, 1, 1)
+            child.set_parent(window)
+            window.layout.add_layout(child.layout, row, 0, 1, 1)
           end
         end
       end
