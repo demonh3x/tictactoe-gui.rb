@@ -5,16 +5,16 @@ module Tictactoe
     class GameWindow
       attr_reader :qt_root
 
-      def initialize(tictactoe, side_size, on_selection)
-
+      def initialize(tictactoe, side_size, on_select)
         @ttt = tictactoe
         @moves = Moves.new
 
         @factory = QtGui::WidgetFactory.new()
 
-        @board = @factory.new_board(side_size * side_size, method(:on_move))
+        cell_count = side_size * side_size
+        @board = @factory.new_board(cell_count, method(:on_move))
         @result = @factory.new_result()
-        play_again = @factory.new_play_again(on_selection)
+        play_again = @factory.new_options([:play_again, :close], on_select)
 
         @window = @factory.new_window()
         @factory.layout(@window, @board, @result, play_again)
@@ -51,13 +51,7 @@ module Tictactoe
 
       def refresh_result
         if @ttt.is_finished?
-          winner = @ttt.winner
-
-          if winner == nil
-            @result.text = "It is a draw."
-          else
-            @result.text = "Player #{winner.to_s.upcase} has won."
-          end
+          @result.announce(@ttt.winner)
         end
       end
     end
@@ -158,8 +152,12 @@ module Tictactoe
           init
         end
 
-        def text=(text)
-          @widget.text = text
+        def announce(winner)
+          if winner == nil
+            @widget.text = "It is a draw."
+          else
+            @widget.text = "Player #{winner.to_s.upcase} has won."
+          end
         end
 
         private
@@ -300,8 +298,8 @@ module Tictactoe
           Result.new()
         end
 
-        def new_play_again(on_select)
-          Options.new([:play_again, :close], on_select)
+        def new_options(options, on_select)
+          Options.new(options, on_select)
         end
 
         def new_timer(on_timeout)
