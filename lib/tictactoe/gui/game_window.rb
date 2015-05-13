@@ -6,7 +6,7 @@ module Tictactoe
       def initialize(tictactoe, side_size, on_final_selection)
         super(nil)
 
-        @factory = QtUi.new(self) #SMELL: self should not be passed to factory
+        @factory = QtGui::WidgetFactory.new(self) #SMELL: self should not be passed to factory
         @window = @factory.create_window
 
         @ttt = tictactoe
@@ -19,8 +19,8 @@ module Tictactoe
         @main_layout = @window.layout
         @board = @factory.create_board(side_size * side_size, method(:on_move))
         @result = @factory.create_result()
-        pa = @factory.create_play_again(@on_final_selection)
-        @factory.join(@window, @board, @result, pa)
+        play_again = @factory.create_play_again(@on_final_selection)
+        @factory.layout(@window, @board, @result, play_again)
 
         @timer = timer
         @timer.start
@@ -91,7 +91,7 @@ module Tictactoe
       end
     end
 
-    class QtUi
+    module QtGui
       class Cell < Qt::PushButton
         def initialize(parent, move)
           super(parent)
@@ -231,30 +231,32 @@ module Tictactoe
           main_layout
         end
       end
+      
+      class WidgetFactory
+        def initialize(parent)
+          @parent = parent
+        end
 
-      def initialize(parent)
-        @parent = parent
-      end
+        def create_board(cell_count, on_move)
+          Board.new(@parent, cell_count, on_move) 
+        end
 
-      def create_board(cell_count, on_move)
-        Board.new(@parent, cell_count, on_move) 
-      end
+        def create_window()
+          Window.new(@parent)
+        end
 
-      def create_window()
-        Window.new(@parent)
-      end
+        def create_result()
+          Result.new(@parent)
+        end
 
-      def create_result()
-        Result.new(@parent)
-      end
+        def create_play_again(on_select)
+          PlayAgain.new(@parent, on_select)
+        end
 
-      def create_play_again(on_select)
-        PlayAgain.new(@parent, on_select)
-      end
-
-      def join(parent, *children)
-        children.each_with_index do |child, row|
-          parent.layout.add_layout(child.layout, row, 0, 1, 1)
+        def layout(parent, *children)
+          children.each_with_index do |child, row|
+            parent.layout.add_layout(child.layout, row, 0, 1, 1)
+          end
         end
       end
     end
