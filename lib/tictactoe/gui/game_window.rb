@@ -30,7 +30,7 @@ module Tictactoe
 
       def close
         @timer.stop
-        @qt_root.close
+        @window.close
       end
 
       private

@@ -14,6 +14,10 @@ module Tictactoe
           @layout = create_main_layout(@root)
         end
 
+        def close
+          @root.close
+        end
+
         private
         def create_main_layout(parent)
           main_layout = Qt::GridLayout.new(parent)
