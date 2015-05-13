@@ -11,16 +11,15 @@ module Tictactoe
         @qt_root = @window.root
 
         @ttt = tictactoe
-        @on_final_selection = on_final_selection
         @moves = Moves.new
 
         @main_layout = @window.layout
         @board = @factory.create_board(side_size * side_size, method(:on_move))
         @result = @factory.create_result()
-        play_again = @factory.create_play_again(@on_final_selection)
+        play_again = @factory.create_play_again(on_final_selection)
         @factory.layout(@window, @board, @result, play_again)
 
-        @timer = timer
+        @timer = @factory.create_timer(method(:tick))
         @timer.start
       end
 
@@ -30,16 +29,17 @@ module Tictactoe
       end
 
       private
-
       def on_move(move)
-        make_move(move)
+        @moves.add(move)
+        @ttt.tick(@moves)
         refresh_board
         refresh_result
       end
 
-      def make_move(move)
-        @moves.add(move)
+      def tick
         @ttt.tick(@moves)
+        refresh_board
+        refresh_result
       end
 
       def refresh_board
@@ -56,21 +56,6 @@ module Tictactoe
             @result.text = "Player #{winner.to_s.upcase} has won."
           end
         end
-      end
-
-      def timer
-        timer = Qt::Timer.new(@qt_root)
-        timer.object_name = 'timer'
-        timer.connect(SIGNAL :timeout) do 
-          tick()
-        end
-        timer
-      end
-
-      def tick
-        @ttt.tick(@moves)
-        refresh_board
-        refresh_result
       end
     end
 
@@ -225,10 +210,35 @@ module Tictactoe
           @layout = create_main_layout(@root)
         end
 
+        private
         def create_main_layout(parent)
           main_layout = Qt::GridLayout.new(parent)
           main_layout.object_name = "main_layout"
           main_layout
+        end
+      end
+
+      class Timer
+        def initialize(parent, on_timeout)
+          @timer = timer(parent, on_timeout)
+        end
+
+        def start
+          @timer.start
+        end
+
+        def stop
+          @timer.stop
+        end
+
+        private
+        def timer(parent, on_timeout)
+          timer = Qt::Timer.new(parent)
+          timer.object_name = 'timer'
+          timer.connect(SIGNAL :timeout) do 
+            on_timeout.call()
+          end
+          timer
         end
       end
       
@@ -251,6 +261,10 @@ module Tictactoe
 
         def create_play_again(on_select)
           PlayAgain.new(@parent, on_select)
+        end
+
+        def create_timer(on_timeout)
+          Timer.new(@parent, on_timeout)
         end
 
         def layout(parent, *children)
