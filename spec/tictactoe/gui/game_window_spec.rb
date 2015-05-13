@@ -148,9 +148,10 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
       expect(find(gui, 'timer').interval).to eq(0)
     end
 
-    it 'is active' do
-      gui = create(spy()).window.root
-      expect(find(gui, 'timer').active).to eq(true)
+    it 'is active after showing the window' do
+      gui = create(spy())
+      gui.show
+      expect(find(gui.window.root, 'timer').active).to eq(true)
     end
 
     it 'is stopped after closing the window' do

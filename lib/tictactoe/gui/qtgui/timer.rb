@@ -4,8 +4,8 @@ module Tictactoe
   module Gui
     module QtGui
       class Timer
-        def initialize(on_timeout)
-          @on_timeout = on_timeout
+        def initialize(on_tic)
+          @on_tic = on_tic
         end
 
         def set_parent(parent)
@@ -24,18 +24,18 @@ module Tictactoe
         private
         def init
           parent = @parent
-          on_timeout = @on_timeout
+          on_tic = @on_tic
 
-          timer = timer(parent, on_timeout)
+          timer = timer(parent, on_tic)
 
           @timer = timer
         end
 
-        def timer(parent, on_timeout)
+        def timer(parent, on_tic)
           timer = Qt::Timer.new(parent)
           timer.object_name = 'timer'
           timer.connect(SIGNAL :timeout) do 
-            on_timeout.call()
+            on_tic.call()
           end
           timer
         end

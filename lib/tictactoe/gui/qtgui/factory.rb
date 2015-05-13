@@ -24,14 +24,14 @@ module Tictactoe
           Options.new(options, on_select)
         end
 
-        def new_timer(on_timeout)
-          Timer.new(on_timeout)
+        def new_timer(on_tic)
+          Timer.new(on_tic)
         end
 
-        def layout(window, *children)
+        def layout(window, children)
           children.each_with_index do |child, row|
             child.set_parent(window)
-            window.layout.add_layout(child.layout, row, 0, 1, 1)
+            window.layout.add_layout(child.layout, row, 0, 1, 1) if child.respond_to? "layout"
           end
         end
       end

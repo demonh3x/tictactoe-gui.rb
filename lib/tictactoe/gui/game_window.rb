@@ -7,52 +7,47 @@ module Tictactoe
 
       def initialize(gui, tictactoe, side_size, on_select)
         @ttt = tictactoe
-        @moves = MovesBuffer.new
+        @moves = MovesBuffer.new()
 
         cell_count = side_size * side_size
         @board = gui.new_board(cell_count, method(:on_move))
         @result = gui.new_result()
-        play_again = gui.new_options([:play_again, :close], on_select)
+        @play_again = gui.new_options([:play_again, :close], on_select)
+        @timer = gui.new_timer(method(:refresh))
 
         @window = gui.new_window()
-        gui.layout(@window, @board, @result, play_again)
-
-        @timer = gui.new_timer(method(:tick))
-        @timer.set_parent(@window)
-        @timer.start
+        gui.layout(@window, [@board, @result, @play_again, @timer])
       end
 
       def close
-        @timer.stop
-        @window.close
+        @timer.stop()
+        @window.close()
       end
 
       def show
-        @window.show
+        @timer.start()
+        @window.show()
       end
 
       private
       def on_move(move)
         @moves.add(move)
-        @ttt.tick(@moves)
-        refresh_board
-        refresh_result
+        refresh()
       end
 
-      def tick
+      def refresh()
         @ttt.tick(@moves)
-        refresh_board
-        refresh_result
+        @timer.stop() if @ttt.is_finished?()
+        refresh_board()
+        refresh_result()
       end
 
-      def refresh_board
+      def refresh_board()
         @board.update(@ttt.marks)
       end
 
-      def refresh_result
-        if @ttt.is_finished?
-          @result.announce(@ttt.winner)
-        end
+      def refresh_result()
+        @result.announce(@ttt.winner) if @ttt.is_finished?()
       end
     end
   end
