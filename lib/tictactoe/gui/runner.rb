@@ -2,6 +2,7 @@ require 'Qt'
 require 'tictactoe/game'
 require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/game_window'
+require 'tictactoe/gui/qtgui/factory'
 
 module Tictactoe
   module Gui
@@ -10,6 +11,8 @@ module Tictactoe
 
       def initialize()
         @app = Qt::Application.new(ARGV)
+        qt_factory = QtGui::WidgetFactory.new()
+
         @menu = MenuWindow.new(lambda{|menu, options|
           menu.hide
 
@@ -19,6 +22,7 @@ module Tictactoe
           }
 
           @game = GameWindow.new(
+            qt_factory,
             create_game(options),
             options[:board],
             on_end_selection
