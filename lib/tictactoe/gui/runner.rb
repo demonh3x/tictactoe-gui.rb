@@ -23,7 +23,7 @@ module Tictactoe
             options[:board],
             on_end_selection
           )
-          @game.qt_root.show
+          @game.show
         })
       end
 

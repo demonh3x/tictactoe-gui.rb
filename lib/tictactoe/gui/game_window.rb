@@ -5,7 +5,7 @@ require 'tictactoe/gui/qtgui/factory'
 module Tictactoe
   module Gui
     class GameWindow
-      attr_reader :qt_root
+      attr_reader :window
 
       def initialize(tictactoe, side_size, on_select)
         @ttt = tictactoe
@@ -24,13 +24,15 @@ module Tictactoe
         @timer = @factory.new_timer(method(:tick))
         @timer.set_parent(@window)
         @timer.start
-
-        @qt_root = @window.root
       end
 
       def close
         @timer.stop
         @window.close
+      end
+
+      def show
+        @window.show
       end
 
       private

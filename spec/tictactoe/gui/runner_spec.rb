@@ -23,7 +23,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.game.qt_root
+    game = app.game.window.root
 
     click_cell(game, 0) #x
     click_cell(game, 3) #o
@@ -41,7 +41,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.game.qt_root
+    game = app.game.window.root
 
     click_cell(game, 0) #x
     click_cell(game, 4) #o
@@ -61,7 +61,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_computer").click
     find(app.menu, "o_computer").click
     find(app.menu, "start").click
-    game = app.game.qt_root
+    game = app.game.window.root
 
     8.times do
       tick(game)
@@ -82,7 +82,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     expect(app.menu.visible).to eq(true)
     find(app.menu, "start").click
     expect(app.menu.visible).to eq(false)
-    expect(app.game.qt_root.visible).to eq(true)
+    expect(app.game.window.root.visible).to eq(true)
   end
 
   it 'after a game, when playing again; shows the menu window' do
@@ -93,7 +93,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.game.qt_root
+    game = app.game.window.root
 
     click_cell(game, 0) #x
     click_cell(game, 3) #o
@@ -101,10 +101,10 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     click_cell(game, 4) #o
     click_cell(game, 2) #x
 
-    expect(app.game.qt_root.visible).to eq(true)
+    expect(app.game.window.root.visible).to eq(true)
     expect(app.menu.visible).to eq(false)
-    find(app.game.qt_root, "play_again").click
-    expect(app.game.qt_root.visible).to eq(false)
+    find(app.game.window.root, "play_again").click
+    expect(app.game.window.root.visible).to eq(false)
     expect(app.menu.visible).to eq(true)
   end
 
@@ -116,7 +116,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(app.menu, "x_human").click
     find(app.menu, "o_human").click
     find(app.menu, "start").click
-    game = app.game.qt_root
+    game = app.game.window.root
 
     click_cell(game, 0) #x
     click_cell(game, 3) #o
@@ -124,10 +124,10 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     click_cell(game, 4) #o
     click_cell(game, 2) #x
 
-    expect(app.game.qt_root.visible).to eq(true)
+    expect(app.game.window.root.visible).to eq(true)
     expect(app.menu.visible).to eq(false)
-    find(app.game.qt_root, "close").click
-    expect(app.game.qt_root.visible).to eq(false)
+    find(app.game.window.root, "close").click
+    expect(app.game.window.root.visible).to eq(false)
     expect(app.menu.visible).to eq(false)
   end
 end
