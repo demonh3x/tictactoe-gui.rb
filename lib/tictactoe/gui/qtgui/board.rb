@@ -4,28 +4,15 @@ module Tictactoe
   module Gui
     module QtGui
       class Board
-        class Cell < Qt::PushButton
-          def initialize(parent, move)
-            super(parent)
-            @move = move
-
-            i = move.to_s
-            self.objectName = "cell_#{i}"
-          end
-
-          attr_reader :move
-        end
-
         attr_reader :layout
 
         def initialize(cell_count, on_move)
           @cell_count = cell_count
           @on_move = on_move
+          init
         end
 
         def set_parent(parent)
-          @parent = parent.root
-          init
         end
 
         def update(marks)
@@ -37,29 +24,33 @@ module Tictactoe
         private
         def init
           cell_count = @cell_count
-          parent = @parent
           on_move = @on_move
 
-          cells = create_cells(cell_count, parent)
-          layout = layout_board(cell_count, on_move, cells)
+          cells = create_cells(cell_count, on_move)
+          layout = layout_board(cells)
 
           @cells = cells
           @layout = layout
         end
 
-        def create_cells(cell_count, parent)
+        def create_cells(cell_count, on_move)
           (0..cell_count-1).map do |move|
-            Cell.new(parent, move)
+            b = Qt::PushButton.new
+            b.objectName = "cell_#{move.to_s}"
+            b.connect(SIGNAL :clicked) do 
+              on_move.call(move)
+            end
+            b
           end
         end
 
-        def layout_board(cell_count, on_move,  cells)
+        def layout_board(cells)
           board_layout = Qt::GridLayout.new()
           board_layout.object_name = "board_layout"
 
           expanding_policy = Qt::SizePolicy.new(Qt::SizePolicy::Expanding, Qt::SizePolicy::Expanding)
 
-          side_size = Math.sqrt(cell_count)
+          side_size = Math.sqrt(cells.count)
           coordinates_sequence = (0..side_size-1).to_a.repeated_permutation(2)
           cells.zip(coordinates_sequence) do |cell, coordinates|
             x,y = coordinates
@@ -67,9 +58,6 @@ module Tictactoe
             board_layout.add_widget(cell, x, y, 1, 1)
 
             cell.size_policy = expanding_policy
-            cell.connect(SIGNAL :clicked) do 
-              on_move.call(cell.move)
-            end
           end
 
           board_layout
