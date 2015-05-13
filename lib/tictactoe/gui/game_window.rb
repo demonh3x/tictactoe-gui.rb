@@ -2,19 +2,20 @@ require 'Qt'
 
 module Tictactoe
   module Gui
-    class GameWindow < Qt::Widget
-      def initialize(tictactoe, side_size, on_final_selection)
-        super(nil)
+    class GameWindow
+      attr_reader :qt_root
 
-        @factory = QtGui::WidgetFactory.new(self) #SMELL: self should not be passed to factory
+      def initialize(tictactoe, side_size, on_final_selection)
+        @qt_root = Qt::Widget.new()
+        @qt_root.object_name = "main_window"
+        @qt_root.resize(240, 340)
+
+        @factory = QtGui::WidgetFactory.new(@qt_root) #SMELL: self should not be passed to factory
         @window = @factory.create_window
 
         @ttt = tictactoe
         @on_final_selection = on_final_selection
         @moves = Moves.new
-
-        self.object_name = "main_window"
-        self.resize(240, 340)
 
         @main_layout = @window.layout
         @board = @factory.create_board(side_size * side_size, method(:on_move))
@@ -28,7 +29,7 @@ module Tictactoe
 
       def close
         @timer.stop
-        super
+        @qt_root.close
       end
 
       private
@@ -62,7 +63,7 @@ module Tictactoe
 
 
       def timer
-        timer = Qt::Timer.new(self)
+        timer = Qt::Timer.new(@qt_root)
         timer.object_name = 'timer'
         timer.connect(SIGNAL :timeout) do 
           tick()

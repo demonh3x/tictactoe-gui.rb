@@ -11,7 +11,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   end
 
   it 'is a widget' do
-    gui = create(spy())
+    gui = create(spy()).qt_root
     expect(gui).to be_kind_of(Qt::Widget)
     expect(gui.parent).to be_nil
     expect(gui.object_name).to eq("main_window")
@@ -43,7 +43,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
       nil, nil, nil,
       nil, nil, nil
     ])
-    gui = create(tictactoe)
+    gui = create(tictactoe).qt_root
     (0..8).each do |index|
       expect_to_have_cell(gui, index)
     end
@@ -52,7 +52,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   (0..8).each do |index|
     it "when cell #{index} is clicked, interacts with tictactoe" do
       tictactoe = spy()
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       find_cell(gui, index).click
       expect(tictactoe).to have_received(:tick)
     end
@@ -65,7 +65,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         nil, nil, nil,
         nil, nil, nil
       ])
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       cell = find_cell(gui, 0)
       cell.click
       expect(cell.text).to eq('x')
@@ -77,7 +77,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         nil, nil, nil,
         :x,  nil, nil
       ])
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       cell = find_cell(gui, 6)
       cell.click
       expect(cell.text).to eq('x')
@@ -85,7 +85,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   end
 
   it 'has the result widget' do
-    gui = create(spy())
+    gui = create(spy()).qt_root
     expect(gui).to have_widged_named("result")
   end
 
@@ -95,7 +95,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         :marks => [],
         :is_finished? => false,
       })
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       find_cell(gui, 0).click
       expect_result_text(gui, nil)
     end
@@ -106,7 +106,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         :is_finished? => true,
         :winner => :x,
       })
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       find_cell(gui, 0).click
       expect_result_text(gui, 'Player X has won.')
     end
@@ -117,7 +117,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         :is_finished? => true,
         :winner => :o,
       })
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       find_cell(gui, 0).click
       expect_result_text(gui, 'Player O has won.')
     end
@@ -128,7 +128,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
         :is_finished? => true,
         :winner => nil,
       })
-      gui = create(tictactoe)
+      gui = create(tictactoe).qt_root
       find_cell(gui, 0).click
       expect_result_text(gui, 'It is a draw.')
     end
@@ -136,31 +136,31 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
 
   describe 'the timer' do
     it 'exists' do
-      gui = create(spy())
+      gui = create(spy()).qt_root
       expect(gui).to have_widged_named 'timer'
       expect(find(gui, 'timer')).to be_an_instance_of Qt::Timer
     end
 
     it 'has the shortest update interval' do
-      gui = create(spy())
+      gui = create(spy()).qt_root
       expect(find(gui, 'timer').interval).to eq(0)
     end
 
     it 'is active' do
-      gui = create(spy())
+      gui = create(spy()).qt_root
       expect(find(gui, 'timer').active).to eq(true)
     end
 
     it 'is stopped after closing the window' do
       gui = create(spy())
       gui.close
-      expect(find(gui, 'timer').active).to eq(false)
+      expect(find(gui.qt_root, 'timer').active).to eq(false)
     end
 
     describe 'when timing out' do
       it 'calls tick on tictactoe' do
         tictactoe = spy()
-        gui = create(tictactoe)
+        gui = create(tictactoe).qt_root
 
         expect(tictactoe).not_to have_received(:tick)
         find(gui, 'timer').timeout
@@ -173,7 +173,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
           nil, nil, nil,
           nil, nil, nil
         ])
-        gui = create(tictactoe)
+        gui = create(tictactoe).qt_root
         find(gui, 'timer').timeout
 
         expect(find_cell(gui, 0).text).to eq('x')
