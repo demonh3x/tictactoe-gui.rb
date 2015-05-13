@@ -6,12 +6,9 @@ module Tictactoe
       attr_reader :qt_root
 
       def initialize(tictactoe, side_size, on_final_selection)
-        @qt_root = Qt::Widget.new()
-        @qt_root.object_name = "main_window"
-        @qt_root.resize(240, 340)
-
-        @factory = QtGui::WidgetFactory.new(@qt_root) #SMELL: self should not be passed to factory
-        @window = @factory.create_window
+        @window = QtGui::WidgetFactory.create_window()
+        @factory = QtGui::WidgetFactory.new(@window.root)
+        @qt_root = @window.root
 
         @ttt = tictactoe
         @on_final_selection = on_final_selection
@@ -60,7 +57,6 @@ module Tictactoe
           end
         end
       end
-
 
       def timer
         timer = Qt::Timer.new(@qt_root)
@@ -218,16 +214,19 @@ module Tictactoe
         end
       end
 
-      class Window 
+      class Window
+        attr_reader :root
         attr_reader :layout
 
-        def initialize(parent)
-          @parent = parent
-          @layout = create_main_layout
+        def initialize()
+          @root = Qt::Widget.new()
+          @root.object_name = "main_window"
+          @root.resize(240, 340)
+          @layout = create_main_layout(@root)
         end
 
-        def create_main_layout
-          main_layout = Qt::GridLayout.new(@parent)
+        def create_main_layout(parent)
+          main_layout = Qt::GridLayout.new(parent)
           main_layout.object_name = "main_layout"
           main_layout
         end
@@ -242,8 +241,8 @@ module Tictactoe
           Board.new(@parent, cell_count, on_move) 
         end
 
-        def create_window()
-          Window.new(@parent)
+        def self.create_window
+          Window.new()
         end
 
         def create_result()
