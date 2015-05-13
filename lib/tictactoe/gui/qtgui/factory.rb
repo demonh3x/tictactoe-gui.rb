@@ -8,12 +8,14 @@ module Tictactoe
   module Gui
     module QtGui
       class WidgetFactory
+        attr_reader :window
+
         def new_board(cell_count, on_move)
           Board.new(cell_count, on_move) 
         end
 
         def new_window()
-          Window.new()
+          @window = Window.new()
         end
 
         def new_result()

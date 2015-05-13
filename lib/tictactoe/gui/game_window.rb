@@ -3,8 +3,6 @@ require 'tictactoe/gui/moves_buffer'
 module Tictactoe
   module Gui
     class GameWindow
-      attr_reader :window
-
       def initialize(gui, tictactoe, side_size, on_select)
         @ttt = tictactoe
         @moves = MovesBuffer.new()

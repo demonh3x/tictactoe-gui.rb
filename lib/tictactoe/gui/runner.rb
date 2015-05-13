@@ -7,7 +7,7 @@ require 'tictactoe/gui/qtgui/factory'
 module Tictactoe
   module Gui
     class Runner
-      attr_reader :app, :menu, :game
+      attr_reader :app, :menu, :game_qt_window
 
       def initialize()
         @app = Qt::Application.new(ARGV)
@@ -21,13 +21,14 @@ module Tictactoe
             menu.show if selection == :play_again
           }
 
-          @game = GameWindow.new(
+          game = GameWindow.new(
             qt_factory,
             create_game(options),
             options[:board],
             on_end_selection
           )
-          @game.show
+          game.show
+          @game_qt_window = qt_factory.window.root
         })
       end
 
