@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'tictactoe/gui/runner'
+require 'tictactoe/gui/menu_window'
+require 'tictactoe/gui/qtgui/menu_gui'
 
 RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
   before(:each) do
@@ -7,7 +8,9 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
   end
 
   def create(start_callback)
-    described_class.new(start_callback).qt_window
+    menu_gui = Tictactoe::Gui::QtGui::MenuGui.new()
+    described_class.new(menu_gui, start_callback)
+    menu_gui.qt_root
   end
 
   it 'has the default options selected' do

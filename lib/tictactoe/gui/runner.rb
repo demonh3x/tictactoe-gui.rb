@@ -2,18 +2,19 @@ require 'Qt'
 require 'tictactoe/game'
 require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/game_window'
-require 'tictactoe/gui/qtgui/factory'
-require 'tictactoe/gui/qtgui/game_window'
+require 'tictactoe/gui/qtgui/game_gui'
+require 'tictactoe/gui/qtgui/menu_gui'
 
 module Tictactoe
   module Gui
     class Runner
-      attr_reader :app, :menu, :game_qt_window
+      attr_reader :app, :menu, :game
 
       def initialize()
         @app = Qt::Application.new(ARGV)
 
-        @menu = MenuWindow.new(lambda{|menu, options|
+        menu_gui = QtGui::MenuGui.new()
+        MenuWindow.new(menu_gui, lambda{|menu, options|
           menu.hide
 
           game_gui = QtGui::GameGui.new()
@@ -25,8 +26,9 @@ module Tictactoe
             }
           )
           game.show
-          @game_qt_window = game_gui.qt_root
+          @game = game_gui.qt_root
         })
+        @menu = menu_gui.qt_root
       end
 
       def run

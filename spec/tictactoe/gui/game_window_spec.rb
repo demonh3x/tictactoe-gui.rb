@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tictactoe/gui/game_window'
 require 'tictactoe/gui/qtgui/factory'
-require 'tictactoe/gui/qtgui/game_window'
+require 'tictactoe/gui/qtgui/game_gui'
 
 RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   before(:each) do

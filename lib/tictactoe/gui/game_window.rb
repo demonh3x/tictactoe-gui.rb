@@ -1,5 +1,4 @@
 require 'tictactoe/gui/moves_buffer'
-require 'tictactoe/gui/qtgui/game_window'
 
 module Tictactoe
   module Gui
