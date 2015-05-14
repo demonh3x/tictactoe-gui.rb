@@ -8,7 +8,7 @@ module Tictactoe
           attr_reader :layout
 
           def set_parent(parent)
-            @parent = parent.root
+            @parent = parent
             init
           end
 

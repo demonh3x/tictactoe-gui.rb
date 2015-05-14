@@ -25,7 +25,7 @@ module Tictactoe
 
           def add(*children)
             children.each_with_index do |child, row|
-              child.set_parent(self)
+              child.set_parent(self.root)
               layout.add_layout(child.layout, row, 0, 1, 1) if child.respond_to? "layout"
             end
           end

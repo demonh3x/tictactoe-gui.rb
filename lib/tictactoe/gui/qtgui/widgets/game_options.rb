@@ -17,7 +17,7 @@ module Tictactoe
           end
 
           def set_parent(parent)
-            @parent = parent.root
+            @parent = parent
             init
           end
 
