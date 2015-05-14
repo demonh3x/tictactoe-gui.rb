@@ -2,10 +2,7 @@ module Tictactoe
   module Gui
     module QtGui
       class GameGui
-        def set_widget_factory(widget_factory)
-          @widget_factory = widget_factory
-          init
-        end
+        attr_reader :widget_factory
 
         def set_board_size(size)
           @size = size * size
@@ -51,8 +48,9 @@ module Tictactoe
 
         private
         def init
-          return unless @widget_factory && @on_play_again && @on_move && @on_tic && @size
+          return unless @on_play_again && @on_move && @on_tic && @size
 
+          @widget_factory = QtGui::WidgetFactory.new()
           @board = @widget_factory.new_board(@size, @on_move)
           @result = @widget_factory.new_result()
           @play_again = @widget_factory.new_options(
@@ -69,7 +67,7 @@ module Tictactoe
         end
 
         def check
-          raise "Not initialized completelly" unless @widget_factory && @on_play_again && @on_move && @on_tic && @size
+          raise "Not initialized completelly" unless @on_play_again && @on_move && @on_tic && @size
         end
       end
     end

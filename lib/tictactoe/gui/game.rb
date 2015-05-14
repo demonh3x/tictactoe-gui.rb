@@ -13,23 +13,25 @@ module Tictactoe
       end
 
       def on_move(move)
-        @moves.add(move)
+        moves.add(move)
         refresh()
       end
 
       def refresh()
-        @ttt.tick(@moves)
+        ttt.tick(moves)
         refresh_board()
         refresh_result()
       end
 
       private
+      attr_reader :moves, :ttt, :gui
+
       def refresh_board()
-        @gui.update(@ttt.marks)
+        gui.update(ttt.marks)
       end
 
       def refresh_result()
-        @gui.announce(@ttt.winner) if @ttt.is_finished?()
+        gui.announce(ttt.winner) if ttt.is_finished?()
       end
     end
   end

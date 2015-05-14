@@ -9,16 +9,13 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   end
 
   def create(ttt)
-    widget_factory = Tictactoe::Gui::QtGui::WidgetFactory.new()
-
     gui = Tictactoe::Gui::QtGui::GameGui.new()
-    gui.set_widget_factory(widget_factory)
     gui.set_board_size(3)
     gui.on_play_again(lambda{})
 
     described_class.new(ttt, gui)
 
-    qt_window = widget_factory.window.root
+    qt_window = gui.widget_factory.window.root
     {:game => gui, :qt => qt_window}
   end
 

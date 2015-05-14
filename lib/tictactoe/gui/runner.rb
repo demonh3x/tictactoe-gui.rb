@@ -16,11 +16,8 @@ module Tictactoe
         @menu = MenuWindow.new(lambda{|menu, options|
           menu.hide
 
-          widget_factory = QtGui::WidgetFactory.new()
           gui = QtGui::GameGui.new()
-          gui.set_widget_factory(widget_factory)
           gui.set_board_size(options[:board])
-
           gui.on_play_again(lambda{
             menu.show
           })
@@ -30,7 +27,7 @@ module Tictactoe
             gui
           )
           gui.show
-          @game_qt_window = widget_factory.window.root
+          @game_qt_window = gui.widget_factory.window.root
         })
       end
 
