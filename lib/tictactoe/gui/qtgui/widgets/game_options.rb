@@ -8,12 +8,8 @@ module Tictactoe
           attr_reader :layout
 
           def initialize(on_select)
+            @selection = {}
             @on_select = on_select
-            @selection = {
-              :x => :human,
-              :o => :human,
-              :board => 3,
-            }
           end
 
           def set_parent(parent)
@@ -51,10 +47,10 @@ module Tictactoe
             widget_options(
               parent,
               "player x",
-              {
-                :x_human => "human",
-                :x_computer => "computer",
-              }
+              [
+                [:x_human, "human", :x, :human, :default],
+                [:x_computer, "computer", :x, :computer],
+              ]
             )
           end
 
@@ -62,10 +58,10 @@ module Tictactoe
             widget_options(
               parent,
               "player o",
-              {
-                :o_human => "human",
-                :o_computer => "computer",
-              }
+              [
+                [:o_human, "human", :o, :human, :default],
+                [:o_computer, "computer", :o, :computer],
+              ]
             )
           end
 
@@ -73,10 +69,10 @@ module Tictactoe
             widget_options(
               parent,
               "board size",
-              {
-                :board_3 => "3",
-                :board_4 => "4",
-              }
+              [
+                [:board_3, "3", :board, 3, :default],
+                [:board_4, "4", :board, 4],
+              ]
             )
           end
 
@@ -84,39 +80,23 @@ module Tictactoe
             group = Qt::GroupBox.new(title)
             layout = Qt::VBoxLayout.new()
 
-            first_option = nil
-            options.each do |id, text|
+            options.each do |id, text, key, val, default|
               option = Qt::RadioButton.new(parent)
-              first_option ||= option
               option.object_name = id.to_s
-              option.text = text.to_s
+              option.text = text
+              select = lambda{
+                @selection[key] = val
+                option.checked = true
+              }
               option.connect(SIGNAL :clicked) do
-                option_selected(id)
+                select.call
               end
+              select.call if default
               layout.add_widget(option)
             end
 
-            first_option.checked = true
-
             group.set_layout(layout)
             group
-          end
-
-          def option_selected(id)
-            case id
-            when :x_human
-              @selection[:x] = :human
-            when :o_human
-              @selection[:o] = :human
-            when :x_computer
-              @selection[:x] = :computer
-            when :o_computer
-              @selection[:o] = :computer
-            when :board_3
-              @selection[:board] = 3
-            when :board_4
-              @selection[:board] = 4
-            end
           end
 
           def widget_start(parent, on_click)
