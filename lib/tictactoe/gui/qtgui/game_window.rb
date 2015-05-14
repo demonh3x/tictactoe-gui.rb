@@ -12,17 +12,17 @@ module Tictactoe
           init
         end
 
-        def set_on_select_option(listener)
-          @on_select_option = listener
+        def on_play_again(listener)
+          @on_play_again = listener
           init
         end
 
-        def set_on_move(listener)
+        def on_move(listener)
           @on_move = listener
           init
         end
 
-        def set_on_tic(listener)
+        def on_tic(listener)
           @on_tic = listener
           init
         end
@@ -51,11 +51,17 @@ module Tictactoe
 
         private
         def init
-          return unless @widget_factory && @on_select_option && @on_move && @on_tic && @size
+          return unless @widget_factory && @on_play_again && @on_move && @on_tic && @size
 
           @board = @widget_factory.new_board(@size, @on_move)
           @result = @widget_factory.new_result()
-          @play_again = @widget_factory.new_options([:play_again, :close], @on_select_option)
+          @play_again = @widget_factory.new_options(
+            [:play_again, :close],
+            lambda{|widget, selection|
+              close()
+              @on_play_again.call() if selection == :play_again
+            }
+          )
           @timer = @widget_factory.new_timer(@on_tic)
 
           @window = @widget_factory.new_window()
@@ -63,7 +69,7 @@ module Tictactoe
         end
 
         def check
-          raise "Not initialized completelly" unless @widget_factory && @on_select_option && @on_move && @on_tic && @size
+          raise "Not initialized completelly" unless @widget_factory && @on_play_again && @on_move && @on_tic && @size
         end
       end
     end

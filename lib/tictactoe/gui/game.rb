@@ -8,8 +8,8 @@ module Tictactoe
         @ttt = tictactoe
         @moves = MovesBuffer.new()
         @gui = gui
-        gui.set_on_move(method(:on_move))
-        gui.set_on_tic(method(:refresh))
+        gui.on_move(method(:on_move))
+        gui.on_tic(method(:refresh))
       end
 
       def on_move(move)

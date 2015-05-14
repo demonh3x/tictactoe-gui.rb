@@ -14,7 +14,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
     gui = Tictactoe::Gui::QtGui::GameGui.new()
     gui.set_widget_factory(widget_factory)
     gui.set_board_size(3)
-    gui.set_on_select_option(lambda{|game, selection|})
+    gui.on_play_again(lambda{})
 
     described_class.new(ttt, gui)
 

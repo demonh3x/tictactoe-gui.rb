@@ -21,11 +21,9 @@ module Tictactoe
           gui.set_widget_factory(widget_factory)
           gui.set_board_size(options[:board])
 
-          on_end_selection = lambda{|game, selection|
-            gui.close
-            menu.show if selection == :play_again
-          }
-          gui.set_on_select_option(on_end_selection)
+          gui.on_play_again(lambda{
+            menu.show
+          })
 
           Gui::GameWindow.new(
             create_game(options),
