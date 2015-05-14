@@ -12,18 +12,19 @@ module Tictactoe
         end
 
         def show
-          qt_root.show
-        end
-
-        def hide
-          qt_root.hide
+          window.show
         end
 
         private
+        attr_reader :window
+
         def init  
           widget_factory = QtGui::Widgets::Factory.new()
-          window = widget_factory.new_window(240, 150)
-          game_options = widget_factory.new_game_options(@on_configured)
+          @window = widget_factory.new_window(240, 150)
+          game_options = widget_factory.new_game_options(lambda{|options|
+            window.close
+            @on_configured.call(options)
+          })
           window.add(game_options)
 
           @qt_root = window.root

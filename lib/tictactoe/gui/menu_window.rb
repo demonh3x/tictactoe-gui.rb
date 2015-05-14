@@ -11,10 +11,6 @@ module Tictactoe
       def show
         @gui.show
       end
-
-      def hide
-        @gui.hide
-      end
     end
   end
 end

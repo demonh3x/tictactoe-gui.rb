@@ -15,8 +15,6 @@ module Tictactoe
 
         menu_gui = QtGui::MenuGui.new()
         menu = MenuWindow.new(menu_gui, lambda{|options|
-          menu.hide
-
           game_gui = QtGui::GameGui.new()
           game = Gui::GameWindow.new(
             create_game(options),
