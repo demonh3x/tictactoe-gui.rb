@@ -29,7 +29,7 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
       :o => :human,
       :board => 3,
     }
-    expect(start_callback).to have_received(:call).with(menu, default_options)
+    expect(start_callback).to have_received(:call).with(default_options)
   end
 
   describe 'sends the different options when selected' do
@@ -45,7 +45,7 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
         :o => :human,
         :board => 4,
       }
-      expect(start_callback).to have_received(:call).with(menu, selected_options)
+      expect(start_callback).to have_received(:call).with(selected_options)
     end
 
     it 'x is human, o is computer, board of size 3' do
@@ -60,7 +60,7 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
         :o => :computer,
         :board => 3,
       }
-      expect(start_callback).to have_received(:call).with(menu, selected_options)
+      expect(start_callback).to have_received(:call).with(selected_options)
     end
   end
 end

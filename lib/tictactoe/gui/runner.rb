@@ -8,13 +8,13 @@ require 'tictactoe/gui/qtgui/menu_gui'
 module Tictactoe
   module Gui
     class Runner
-      attr_reader :app, :menu, :game
+      attr_reader :menu, :game
 
       def initialize()
         @app = Qt::Application.new(ARGV)
 
         menu_gui = QtGui::MenuGui.new()
-        MenuWindow.new(menu_gui, lambda{|menu, options|
+        menu = MenuWindow.new(menu_gui, lambda{|options|
           menu.hide
 
           game_gui = QtGui::GameGui.new()
@@ -37,6 +37,8 @@ module Tictactoe
       end
 
       private
+      attr_reader :app
+
       def create_game(options)
         ttt = Tictactoe::Game.new
         ttt.set_board_size(options[:board])

@@ -29,7 +29,7 @@ module Tictactoe
             ws = widget_start(
               parent,
               lambda{
-                on_select.call(parent, @selection)
+                on_select.call(@selection)
               }
             )
             layout.add_widget(ws, 1, 0, 1, 3)

@@ -11,6 +11,14 @@ module Tictactoe
           init
         end
 
+        def show
+          qt_root.show
+        end
+
+        def hide
+          qt_root.hide
+        end
+
         private
         def init  
           widget_factory = QtGui::Widgets::Factory.new()
