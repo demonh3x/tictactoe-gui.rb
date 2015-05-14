@@ -13,10 +13,10 @@ module Tictactoe
 
         private
         def init  
-          @widget_factory = QtGui::Widgets::Factory.new()
-          @window = @widget_factory.new_window(240, 150)
-          @game_options = @widget_factory.new_game_options(@on_configured)
-          @widget_factory.layout(@window, [@game_options])
+          widget_factory = QtGui::Widgets::Factory.new()
+          window = widget_factory.new_window(240, 150)
+          game_options = widget_factory.new_game_options(@on_configured)
+          widget_factory.layout(window, [game_options])
 
           @qt_root = @widget_factory.window.root
         end
