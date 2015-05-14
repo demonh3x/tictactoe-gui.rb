@@ -6,21 +6,18 @@ module Tictactoe
       module Widgets
         class Window
           attr_reader :root
-          attr_reader :layout
 
           def initialize(width, height)
-            @root = Qt::Widget.new()
-            @root.object_name = "main_window"
-            @root.resize(width, height)
-            @layout = create_main_layout(@root)
+            @root = create_root(width, height)
+            @layout = create_layout(@root, "main_layout")
           end
 
           def close
-            @root.close
+            root.close
           end
 
           def show
-            @root.show
+            root.show
           end
 
           def add(*children)
@@ -31,10 +28,19 @@ module Tictactoe
           end
 
           private
-          def create_main_layout(parent)
-            main_layout = Qt::GridLayout.new(parent)
-            main_layout.object_name = "main_layout"
-            main_layout
+          attr_reader :layout
+
+          def create_root(width, height)
+            root = Qt::Widget.new()
+            root.object_name = "main_window"
+            root.resize(width, height)
+            root
+          end
+
+          def create_layout(parent, name)
+            layout = Qt::GridLayout.new(parent)
+            layout.object_name = name
+            layout
           end
         end
       end
