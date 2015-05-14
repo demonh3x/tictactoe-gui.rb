@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'tictactoe/gui/game_window'
 require 'tictactoe/gui/qtgui/factory'
+require 'tictactoe/gui/qtgui/game_window'
 
 RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   before(:each) do
@@ -8,9 +9,14 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   end
 
   def create(ttt)
-    qt_factory = Tictactoe::Gui::QtGui::WidgetFactory.new()
-    game_window = described_class.new(qt_factory, ttt, 3, lambda{|game, selection|})
-    qt_window = qt_factory.window.root
+    widget_factory = Tictactoe::Gui::QtGui::WidgetFactory.new()
+
+    gui = Tictactoe::Gui::QtGui::GameWindow.new()
+    gui.set_widget_factory(widget_factory)
+    gui.set_board_size(3)
+
+    game_window = described_class.new(gui, ttt, 3, lambda{|game, selection|})
+    qt_window = widget_factory.window.root
     {:game => game_window, :qt => qt_window}
   end
 

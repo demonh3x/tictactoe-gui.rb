@@ -3,6 +3,7 @@ require 'tictactoe/game'
 require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/game_window'
 require 'tictactoe/gui/qtgui/factory'
+require 'tictactoe/gui/qtgui/game_window'
 
 module Tictactoe
   module Gui
@@ -11,7 +12,6 @@ module Tictactoe
 
       def initialize()
         @app = Qt::Application.new(ARGV)
-        widget_factory = QtGui::WidgetFactory.new()
 
         @menu = MenuWindow.new(lambda{|menu, options|
           menu.hide
@@ -21,8 +21,13 @@ module Tictactoe
             menu.show if selection == :play_again
           }
 
+          widget_factory = QtGui::WidgetFactory.new()
+          gui = QtGui::GameWindow.new()
+          gui.set_widget_factory(widget_factory)
+          gui.set_board_size(options[:board])
+
           game = GameWindow.new(
-            widget_factory,
+            gui,
             create_game(options),
             options[:board],
             on_end_selection

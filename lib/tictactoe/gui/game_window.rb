@@ -4,14 +4,11 @@ require 'tictactoe/gui/qtgui/game_window'
 module Tictactoe
   module Gui
     class GameWindow
-      def initialize(widget_factory, tictactoe, side_size, on_select)
+      def initialize(gui, tictactoe, side_size, on_select)
         @ttt = tictactoe
         @moves = MovesBuffer.new()
 
-        @gui = QtGui::GameWindow.new()
-        @gui.set_widget_factory(widget_factory)
-        @gui.set_board_size(side_size)
-
+        @gui = gui
         @gui.set_on_select_option(on_select)
         @gui.set_on_move(method(:on_move))
         @gui.set_on_tic(method(:refresh))
