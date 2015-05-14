@@ -23,7 +23,7 @@ module Tictactoe
             on_select = @on_select
             options = @options
 
-            buttons = options.map {|option| create_button(parent, option, on_select)}
+            buttons = options.map {|id, text| create_button(parent, id, text, on_select)}
             layout = create_layout(buttons)
 
             @layout = layout
@@ -37,12 +37,12 @@ module Tictactoe
             layout
           end
 
-          def create_button(parent, id, on_select)
+          def create_button(parent, id, text, on_select)
             b = Qt::PushButton.new(parent)
             b.object_name = id.to_s
-            b.text = id.to_s.sub('_', ' ').capitalize
+            b.text = text
             b.connect(SIGNAL :clicked) do 
-              on_select.call(parent, id)
+              on_select.call(id)
             end
             b
           end

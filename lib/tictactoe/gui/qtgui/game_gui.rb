@@ -60,8 +60,8 @@ module Tictactoe
           @board = @widget_factory.new_board(@size, @on_move)
           @result = @widget_factory.new_result()
           @play_again = @widget_factory.new_options(
-            [:play_again, :close],
-            lambda{|widget, selection|
+            {:play_again => "Play again", :close => "Close"},
+            lambda{|selection|
               close()
               @on_play_again.call() if selection == :play_again
             }
