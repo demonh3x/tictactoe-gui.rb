@@ -11,7 +11,7 @@ module Tictactoe
 
       def initialize()
         @app = Qt::Application.new(ARGV)
-        qt_factory = QtGui::WidgetFactory.new()
+        widget_factory = QtGui::WidgetFactory.new()
 
         @menu = MenuWindow.new(lambda{|menu, options|
           menu.hide
@@ -22,13 +22,13 @@ module Tictactoe
           }
 
           game = GameWindow.new(
-            qt_factory,
+            widget_factory,
             create_game(options),
             options[:board],
             on_end_selection
           )
           game.show
-          @game_qt_window = qt_factory.window.root
+          @game_qt_window = widget_factory.window.root
         })
       end
 

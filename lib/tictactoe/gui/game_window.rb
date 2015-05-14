@@ -1,31 +1,24 @@
 require 'tictactoe/gui/moves_buffer'
+require 'tictactoe/gui/qtgui/game_window'
 
 module Tictactoe
   module Gui
     class GameWindow
-      def initialize(gui, tictactoe, side_size, on_select)
+      def initialize(widget_factory, tictactoe, side_size, on_select)
         @ttt = tictactoe
         @moves = MovesBuffer.new()
 
-        cell_count = side_size * side_size
-        @board = gui.new_board(cell_count, method(:on_move))
-        @result = gui.new_result()
-        @play_again = gui.new_options([:play_again, :close], on_select)
-        @timer = gui.new_timer(method(:refresh))
+        @gui = QtGui::GameWindow.new()
+        @gui.set_widget_factory(widget_factory)
+        @gui.set_board_size(side_size)
 
-        @window = gui.new_window()
-        gui.layout(@window, [@board, @result, @play_again, @timer])
+        @gui.set_on_select_option(on_select)
+        @gui.set_on_move(method(:on_move))
+        @gui.set_on_tic(method(:refresh))
       end
 
-      def close
-        @timer.stop()
-        @window.close()
-      end
-
-      def show
-        @timer.start()
-        @window.show()
-      end
+      def show; @gui.show; end
+      def close; @gui.close; end
 
       private
       def on_move(move)
@@ -35,17 +28,16 @@ module Tictactoe
 
       def refresh()
         @ttt.tick(@moves)
-        @timer.stop() if @ttt.is_finished?()
         refresh_board()
         refresh_result()
       end
 
       def refresh_board()
-        @board.update(@ttt.marks)
+        @gui.update(@ttt.marks)
       end
 
       def refresh_result()
-        @result.announce(@ttt.winner) if @ttt.is_finished?()
+        @gui.announce(@ttt.winner) if @ttt.is_finished?()
       end
     end
   end
