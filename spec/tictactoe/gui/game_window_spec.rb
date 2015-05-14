@@ -7,7 +7,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
   end
 
   def create(ttt)
-    described_class.new(ttt, 3)
+    described_class.new(ttt, 3, lambda{|game, selection|})
   end
 
   it 'is a widget' do
@@ -149,6 +149,12 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
     it 'is active' do
       gui = create(spy())
       expect(find(gui, 'timer').active).to eq(true)
+    end
+
+    it 'is stopped after closing the window' do
+      gui = create(spy())
+      gui.close
+      expect(find(gui, 'timer').active).to eq(false)
     end
 
     describe 'when timing out' do

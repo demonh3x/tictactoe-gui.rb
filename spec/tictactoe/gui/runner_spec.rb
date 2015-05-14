@@ -70,4 +70,64 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     tick(game)
     expect(find(game, "result").text).to eq('It is a draw.')
   end
+
+  it 'hides the options window when a game starts running' do
+    app = described_class.new
+    app.menu.show
+
+    find(app.menu, "board_3").click
+    find(app.menu, "x_human").click
+    find(app.menu, "o_human").click
+    
+    expect(app.menu.visible).to eq(true)
+    find(app.menu, "start").click
+    expect(app.menu.visible).to eq(false)
+    expect(app.game.visible).to eq(true)
+  end
+
+  it 'after a game, when playing again; shows the menu window' do
+    app = described_class.new
+    app.menu.show
+
+    find(app.menu, "board_3").click
+    find(app.menu, "x_human").click
+    find(app.menu, "o_human").click
+    find(app.menu, "start").click
+    game = app.game
+
+    click_cell(game, 0) #x
+    click_cell(game, 3) #o
+    click_cell(game, 1) #x
+    click_cell(game, 4) #o
+    click_cell(game, 2) #x
+
+    expect(app.game.visible).to eq(true)
+    expect(app.menu.visible).to eq(false)
+    find(app.game, "play_again").click
+    expect(app.game.visible).to eq(false)
+    expect(app.menu.visible).to eq(true)
+  end
+
+  it 'after a game, when not playing again; does not show any window' do
+    app = described_class.new
+    app.menu.show
+
+    find(app.menu, "board_3").click
+    find(app.menu, "x_human").click
+    find(app.menu, "o_human").click
+    find(app.menu, "start").click
+    game = app.game
+
+    click_cell(game, 0) #x
+    click_cell(game, 3) #o
+    click_cell(game, 1) #x
+    click_cell(game, 4) #o
+    click_cell(game, 2) #x
+
+    expect(app.game.visible).to eq(true)
+    expect(app.menu.visible).to eq(false)
+    find(app.game, "close").click
+    expect(app.game.visible).to eq(false)
+    expect(app.menu.visible).to eq(false)
+  end
 end

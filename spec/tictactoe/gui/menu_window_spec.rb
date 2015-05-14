@@ -17,11 +17,12 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
     start_callback = spy()
     menu = described_class.new(start_callback)
     find(menu, "start").click
-    expect(start_callback).to have_received(:call).with({
+    default_options = {
       :x => :human,
       :o => :human,
       :board => 3,
-    })
+    }
+    expect(start_callback).to have_received(:call).with(menu, default_options)
   end
 
   describe 'sends the different options when selected' do
@@ -32,11 +33,12 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
       find(menu, "o_human").click
       find(menu, "board_4").click
       find(menu, "start").click
-      expect(start_callback).to have_received(:call).with({
+      selected_options = {
         :x => :computer,
         :o => :human,
         :board => 4,
-      })
+      }
+      expect(start_callback).to have_received(:call).with(menu, selected_options)
     end
 
     it 'x is human, o is computer, board of size 3' do
@@ -46,11 +48,12 @@ RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
       find(menu, "o_computer").click
       find(menu, "board_3").click
       find(menu, "start").click
-      expect(start_callback).to have_received(:call).with({
+      selected_options = {
         :x => :human,
         :o => :computer,
         :board => 3,
-      })
+      }
+      expect(start_callback).to have_received(:call).with(menu, selected_options)
     end
   end
 end
