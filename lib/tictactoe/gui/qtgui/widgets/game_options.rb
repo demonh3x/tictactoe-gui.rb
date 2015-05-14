@@ -48,8 +48,8 @@ module Tictactoe
               parent,
               "player x",
               [
-                [:x_human,    "human",    :x, :human, :default],
-                [:x_computer, "computer", :x, :computer],
+                [:x_human,    "human",    lambda{|sel| sel[:x] = :human}, :default],
+                [:x_computer, "computer", lambda{|sel| sel[:x] = :computer}],
               ]
             )
           end
@@ -59,8 +59,8 @@ module Tictactoe
               parent,
               "player o",
               [
-                [:o_human,    "human",    :o, :human, :default],
-                [:o_computer, "computer", :o, :computer],
+                [:o_human,    "human",    lambda{|sel| sel[:o] = :human}, :default],
+                [:o_computer, "computer", lambda{|sel| sel[:o] = :computer}],
               ]
             )
           end
@@ -70,8 +70,8 @@ module Tictactoe
               parent,
               "board size",
               [
-                [:board_3, "3", :board, 3, :default],
-                [:board_4, "4", :board, 4],
+                [:board_3, "3", lambda{|sel| sel[:board] = 3}, :default],
+                [:board_4, "4", lambda{|sel| sel[:board] = 4}],
               ]
             )
           end
@@ -80,18 +80,18 @@ module Tictactoe
             group = Qt::GroupBox.new(title)
             layout = Qt::VBoxLayout.new()
 
-            options.each do |id, text, key, val, default|
+            options.each do |id, text, selection_fn, is_default|
               option = Qt::RadioButton.new(parent)
               option.object_name = id.to_s
               option.text = text
               select = lambda{
-                @selection[key] = val
+                selection_fn.call(@selection)
                 option.checked = true
               }
               option.connect(SIGNAL :clicked) do
                 select.call
               end
-              select.call if default
+              select.call if is_default
               layout.add_widget(option)
             end
 
