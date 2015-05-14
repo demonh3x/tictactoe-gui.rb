@@ -17,16 +17,14 @@ module Tictactoe
           menu.hide
 
           gui = QtGui::GameGui.new()
-          gui.set_board_size(options[:board])
-          gui.on_play_again(lambda{
-            menu.show
-          })
-
-          Gui::GameWindow.new(
+          game = Gui::GameWindow.new(
             create_game(options),
-            gui
+            gui,
+            lambda{
+              menu.show
+            }
           )
-          gui.show
+          game.show
           @game_qt_window = gui.widget_factory.window.root
         })
       end

@@ -47,8 +47,12 @@ module Tictactoe
         end
 
         private
+        def is_initialized?
+          @on_play_again && @on_move && @on_tic && @size
+        end
+
         def init
-          return unless @on_play_again && @on_move && @on_tic && @size
+          return unless is_initialized?
 
           @widget_factory = QtGui::WidgetFactory.new()
           @board = @widget_factory.new_board(@size, @on_move)
@@ -67,7 +71,7 @@ module Tictactoe
         end
 
         def check
-          raise "Not initialized completelly" unless @on_play_again && @on_move && @on_tic && @size
+          raise "Not initialized completelly" unless is_initialized?
         end
       end
     end
