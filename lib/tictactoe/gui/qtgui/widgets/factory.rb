@@ -10,14 +10,12 @@ module Tictactoe
     module QtGui
       module Widgets
         class Factory
-          attr_reader :window
-
           def new_board(cell_count, on_move)
             Board.new(cell_count, on_move) 
           end
 
           def new_window(width, height)
-            @window = Window.new(width, height)
+            Window.new(width, height)
           end
 
           def new_result()
