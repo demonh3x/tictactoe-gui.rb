@@ -3,14 +3,14 @@ require 'tictactoe/gui/qtgui/game_window'
 
 module Tictactoe
   module Gui
-    class GameWindow
-      def initialize(gui, tictactoe)
+    class Game
+      def initialize(window, tictactoe)
         @ttt = tictactoe
         @moves = MovesBuffer.new()
 
-        @gui = gui
-        @gui.set_on_move(method(:on_move))
-        @gui.set_on_tic(method(:refresh))
+        @window = window
+        @window.set_on_move(method(:on_move))
+        @window.set_on_tic(method(:refresh))
       end
 
       private
@@ -26,11 +26,11 @@ module Tictactoe
       end
 
       def refresh_board()
-        @gui.update(@ttt.marks)
+        @window.update(@ttt.marks)
       end
 
       def refresh_result()
-        @gui.announce(@ttt.winner) if @ttt.is_finished?()
+        @window.announce(@ttt.winner) if @ttt.is_finished?()
       end
     end
   end
