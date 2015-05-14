@@ -18,11 +18,12 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
 
   it 'running a full game between two humans on a 3 by 3 board' do
     app = described_class.new
+    menu = app.menu.qt_window
 
-    find(app.menu, "board_3").click
-    find(app.menu, "x_human").click
-    find(app.menu, "o_human").click
-    find(app.menu, "start").click
+    find(menu, "board_3").click
+    find(menu, "x_human").click
+    find(menu, "o_human").click
+    find(menu, "start").click
     game = app.game_qt_window
 
     click_cell(game, 0) #x
@@ -36,11 +37,12 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
 
   it 'running a full game between two humans on a 4 by 4 board' do
     app = described_class.new
+    menu = app.menu.qt_window
 
-    find(app.menu, "board_4").click
-    find(app.menu, "x_human").click
-    find(app.menu, "o_human").click
-    find(app.menu, "start").click
+    find(menu, "board_4").click
+    find(menu, "x_human").click
+    find(menu, "o_human").click
+    find(menu, "start").click
     game = app.game_qt_window
 
     click_cell(game, 0) #x
@@ -56,11 +58,12 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
 
   it 'running a full game between two computers on a 3 by 3 board' do
     app = described_class.new
+    menu = app.menu.qt_window
 
-    find(app.menu, "board_3").click
-    find(app.menu, "x_computer").click
-    find(app.menu, "o_computer").click
-    find(app.menu, "start").click
+    find(menu, "board_3").click
+    find(menu, "x_computer").click
+    find(menu, "o_computer").click
+    find(menu, "start").click
     game = app.game_qt_window
 
     8.times do
@@ -73,26 +76,28 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
 
   it 'hides the options window when a game starts running' do
     app = described_class.new
-    app.menu.show
+    menu = app.menu.qt_window
+    menu.show
 
-    find(app.menu, "board_3").click
-    find(app.menu, "x_human").click
-    find(app.menu, "o_human").click
+    find(menu, "board_3").click
+    find(menu, "x_human").click
+    find(menu, "o_human").click
     
-    expect(app.menu.visible).to eq(true)
-    find(app.menu, "start").click
-    expect(app.menu.visible).to eq(false)
+    expect(menu.visible).to eq(true)
+    find(menu, "start").click
+    expect(menu.visible).to eq(false)
     expect(app.game_qt_window.visible).to eq(true)
   end
 
   it 'after a game, when playing again; shows the menu window' do
     app = described_class.new
-    app.menu.show
+    menu = app.menu.qt_window
+    menu.show
 
-    find(app.menu, "board_3").click
-    find(app.menu, "x_human").click
-    find(app.menu, "o_human").click
-    find(app.menu, "start").click
+    find(menu, "board_3").click
+    find(menu, "x_human").click
+    find(menu, "o_human").click
+    find(menu, "start").click
     game = app.game_qt_window
 
     click_cell(game, 0) #x
@@ -102,20 +107,21 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     click_cell(game, 2) #x
 
     expect(app.game_qt_window.visible).to eq(true)
-    expect(app.menu.visible).to eq(false)
+    expect(menu.visible).to eq(false)
     find(app.game_qt_window, "play_again").click
     expect(app.game_qt_window.visible).to eq(false)
-    expect(app.menu.visible).to eq(true)
+    expect(menu.visible).to eq(true)
   end
 
   it 'after a game, when not playing again; does not show any window' do
     app = described_class.new
-    app.menu.show
+    menu = app.menu.qt_window
+    menu.show
 
-    find(app.menu, "board_3").click
-    find(app.menu, "x_human").click
-    find(app.menu, "o_human").click
-    find(app.menu, "start").click
+    find(menu, "board_3").click
+    find(menu, "x_human").click
+    find(menu, "o_human").click
+    find(menu, "start").click
     game = app.game_qt_window
 
     click_cell(game, 0) #x
@@ -125,9 +131,9 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     click_cell(game, 2) #x
 
     expect(app.game_qt_window.visible).to eq(true)
-    expect(app.menu.visible).to eq(false)
+    expect(menu.visible).to eq(false)
     find(app.game_qt_window, "close").click
     expect(app.game_qt_window.visible).to eq(false)
-    expect(app.menu.visible).to eq(false)
+    expect(menu.visible).to eq(false)
   end
 end
