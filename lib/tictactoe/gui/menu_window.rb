@@ -15,22 +15,23 @@ module Tictactoe
         self.object_name = "main_window"
         self.resize(240, 150)
 
-        @main_layout = main_layout
-        @main_layout.add_widget(widget_x_selector, 0, 0, 1, 1)
-        @main_layout.add_widget(widget_o_selector, 0, 1, 1, 1)
-        @main_layout.add_widget(widget_board_selector, 0, 2, 1, 1)
-        @main_layout.add_widget(widget_start, 1, 0, 1, 3)
+        main_layout = new_main_layout(self)
+        main_layout.add_widget(widget_x_selector(self), 0, 0, 1, 1)
+        main_layout.add_widget(widget_o_selector(self), 0, 1, 1, 1)
+        main_layout.add_widget(widget_board_selector(self), 0, 2, 1, 1)
+        main_layout.add_widget(widget_start(self), 1, 0, 1, 3)
       end
       
       private
-      def main_layout
-        main_layout = Qt::GridLayout.new(self)
+      def new_main_layout(parent)
+        main_layout = Qt::GridLayout.new(parent)
         main_layout.object_name = "main_layout"
         main_layout
       end
 
-      def widget_x_selector
+      def widget_x_selector(parent)
         widget_options(
+          parent,
           "player x",
           {
             :x_human => "human",
@@ -39,8 +40,9 @@ module Tictactoe
         )
       end
 
-      def widget_o_selector
+      def widget_o_selector(parent)
         widget_options(
+          parent,
           "player o",
           {
             :o_human => "human",
@@ -49,8 +51,9 @@ module Tictactoe
         )
       end
 
-      def widget_board_selector
+      def widget_board_selector(parent)
         widget_options(
+          parent,
           "board size",
           {
             :board_3 => "3",
@@ -59,17 +62,17 @@ module Tictactoe
         )
       end
 
-      def widget_options(title, options)
+      def widget_options(parent, title, options)
         group = Qt::GroupBox.new(title)
         layout = Qt::VBoxLayout.new()
 
         first_option = nil
         options.each do |id, text|
-          option = Qt::RadioButton.new(self)
+          option = Qt::RadioButton.new(parent)
           first_option ||= option
           option.object_name = id.to_s
           option.text = text.to_s
-          Qt::Object.connect(option, SIGNAL('clicked()'), self, SLOT('option_selected()'))
+          Qt::Object.connect(option, SIGNAL('clicked()'), parent, SLOT('option_selected()'))
           layout.add_widget(option)
         end
 
@@ -79,11 +82,11 @@ module Tictactoe
         group
       end
 
-      def widget_start
-        b = Qt::PushButton.new(self)
+      def widget_start(parent)
+        b = Qt::PushButton.new(parent)
         b.object_name = "start"
         b.text = "Start game"
-        Qt::Object.connect(b, SIGNAL('clicked()'), self, SLOT('start_game()'))
+        Qt::Object.connect(b, SIGNAL('clicked()'), parent, SLOT('start_game()'))
         b
       end
 
