@@ -16,23 +16,22 @@ module Tictactoe
         @menu = MenuWindow.new(lambda{|menu, options|
           menu.hide
 
-          on_end_selection = lambda{|game, selection|
-            game.close
-            menu.show if selection == :play_again
-          }
-
           widget_factory = QtGui::WidgetFactory.new()
           gui = QtGui::GameWindow.new()
           gui.set_widget_factory(widget_factory)
           gui.set_board_size(options[:board])
 
-          game = GameWindow.new(
+          on_end_selection = lambda{|game, selection|
+            gui.close
+            menu.show if selection == :play_again
+          }
+          gui.set_on_select_option(on_end_selection)
+
+          GameWindow.new(
             gui,
-            create_game(options),
-            options[:board],
-            on_end_selection
+            create_game(options)
           )
-          game.show
+          gui.show
           @game_qt_window = widget_factory.window.root
         })
       end

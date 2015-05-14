@@ -14,10 +14,12 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
     gui = Tictactoe::Gui::QtGui::GameWindow.new()
     gui.set_widget_factory(widget_factory)
     gui.set_board_size(3)
+    gui.set_on_select_option(lambda{|game, selection|})
 
-    game_window = described_class.new(gui, ttt, 3, lambda{|game, selection|})
+    described_class.new(gui, ttt)
+
     qt_window = widget_factory.window.root
-    {:game => game_window, :qt => qt_window}
+    {:game => gui, :qt => qt_window}
   end
 
   it 'is a widget' do
