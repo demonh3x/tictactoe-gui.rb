@@ -48,7 +48,7 @@ module Tictactoe
               parent,
               "player x",
               [
-                [:x_human, "human", :x, :human, :default],
+                [:x_human,    "human",    :x, :human, :default],
                 [:x_computer, "computer", :x, :computer],
               ]
             )
@@ -59,7 +59,7 @@ module Tictactoe
               parent,
               "player o",
               [
-                [:o_human, "human", :o, :human, :default],
+                [:o_human,    "human",    :o, :human, :default],
                 [:o_computer, "computer", :o, :computer],
               ]
             )
