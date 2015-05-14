@@ -2,6 +2,7 @@ require 'tictactoe/gui/qtgui/board'
 require 'tictactoe/gui/qtgui/window'
 require 'tictactoe/gui/qtgui/result'
 require 'tictactoe/gui/qtgui/options'
+require 'tictactoe/gui/qtgui/game_options'
 require 'tictactoe/gui/qtgui/timer'
 
 module Tictactoe
@@ -14,8 +15,8 @@ module Tictactoe
           Board.new(cell_count, on_move) 
         end
 
-        def new_window()
-          @window = Window.new()
+        def new_window(width, height)
+          @window = Window.new(width, height)
         end
 
         def new_result()
@@ -28,6 +29,10 @@ module Tictactoe
 
         def new_timer(on_tic)
           Timer.new(on_tic)
+        end
+
+        def new_game_options(on_select)
+          GameOptions.new(on_select)
         end
 
         def layout(window, children)

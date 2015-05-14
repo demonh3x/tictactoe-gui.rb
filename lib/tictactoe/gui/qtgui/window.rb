@@ -7,10 +7,10 @@ module Tictactoe
         attr_reader :root
         attr_reader :layout
 
-        def initialize()
+        def initialize(width, height)
           @root = Qt::Widget.new()
           @root.object_name = "main_window"
-          @root.resize(240, 340)
+          @root.resize(width, height)
           @layout = create_main_layout(@root)
         end
 

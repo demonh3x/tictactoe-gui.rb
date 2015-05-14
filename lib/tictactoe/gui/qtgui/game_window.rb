@@ -66,7 +66,7 @@ module Tictactoe
           )
           @timer = @widget_factory.new_timer(@on_tic)
 
-          @window = @widget_factory.new_window()
+          @window = @widget_factory.new_window(240, 340)
           @widget_factory.layout(@window, [@board, @result, @play_again, @timer])
 
           @qt_root = @widget_factory.window.root
