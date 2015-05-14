@@ -23,6 +23,13 @@ module Tictactoe
             @root.show
           end
 
+          def add(*children)
+            children.each_with_index do |child, row|
+              child.set_parent(self)
+              layout.add_layout(child.layout, row, 0, 1, 1) if child.respond_to? "layout"
+            end
+          end
+
           private
           def create_main_layout(parent)
             main_layout = Qt::GridLayout.new(parent)

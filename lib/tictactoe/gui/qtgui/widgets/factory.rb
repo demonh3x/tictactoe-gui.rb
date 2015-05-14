@@ -33,13 +33,6 @@ module Tictactoe
           def new_game_options(on_select)
             GameOptions.new(on_select)
           end
-
-          def layout(window, children)
-            children.each_with_index do |child, row|
-              child.set_parent(window)
-              window.layout.add_layout(child.layout, row, 0, 1, 1) if child.respond_to? "layout"
-            end
-          end
         end
       end
     end

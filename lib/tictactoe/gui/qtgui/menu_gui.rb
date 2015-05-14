@@ -16,7 +16,7 @@ module Tictactoe
           widget_factory = QtGui::Widgets::Factory.new()
           window = widget_factory.new_window(240, 150)
           game_options = widget_factory.new_game_options(@on_configured)
-          widget_factory.layout(window, [game_options])
+          window.add(game_options)
 
           @qt_root = window.root
         end
