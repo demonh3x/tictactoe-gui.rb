@@ -2,7 +2,7 @@ module Tictactoe
   module Gui
     module QtGui
       class GameGui
-        attr_reader :widget_factory
+        attr_reader :qt_root
 
         def set_board_size(size)
           @size = size * size
@@ -68,6 +68,8 @@ module Tictactoe
 
           @window = @widget_factory.new_window()
           @widget_factory.layout(@window, [@board, @result, @play_again, @timer])
+
+          @qt_root = @widget_factory.window.root
         end
 
         def check
