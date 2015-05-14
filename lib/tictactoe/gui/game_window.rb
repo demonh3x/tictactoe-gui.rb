@@ -8,8 +8,7 @@ module Tictactoe
         @moves = MovesBuffer.new()
         @game_gui = game_gui
 
-        board_size = Math.sqrt(@ttt.marks.length).to_i
-        game_gui.set_board_size(board_size)
+        game_gui.set_board_size(@ttt.marks.length)
         game_gui.on_play_again(on_play_again)
         game_gui.on_move(method(:on_move))
         game_gui.on_tic(method(:refresh))

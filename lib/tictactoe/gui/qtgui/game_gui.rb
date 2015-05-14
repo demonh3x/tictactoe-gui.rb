@@ -7,7 +7,7 @@ module Tictactoe
         attr_reader :qt_root
 
         def set_board_size(size)
-          @size = size * size
+          @size = size
           init
         end
 
