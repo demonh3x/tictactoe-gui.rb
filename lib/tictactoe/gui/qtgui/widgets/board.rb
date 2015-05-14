@@ -17,12 +17,14 @@ module Tictactoe
           end
 
           def update(marks)
-            @cells.zip(marks) do |cell, mark|
+            cells.zip(marks) do |cell, mark|
               cell.text = mark.to_s
             end
           end
 
           private
+          attr_reader :cells
+
           def init
             cell_count = @cell_count
             on_move = @on_move
