@@ -1,3 +1,5 @@
+require 'tictactoe/gui/qtgui/widgets/factory'
+
 module Tictactoe
   module Gui
     module QtGui
@@ -54,7 +56,7 @@ module Tictactoe
         def init
           return unless is_initialized?
 
-          @widget_factory = QtGui::WidgetFactory.new()
+          @widget_factory = QtGui::Widgets::Factory.new()
           @board = @widget_factory.new_board(@size, @on_move)
           @result = @widget_factory.new_result()
           @play_again = @widget_factory.new_options(
