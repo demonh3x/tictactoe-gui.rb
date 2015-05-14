@@ -1,9 +1,9 @@
 require 'tictactoe/gui/qtgui/widgets/board'
 require 'tictactoe/gui/qtgui/widgets/window'
-require 'tictactoe/gui/qtgui/result'
-require 'tictactoe/gui/qtgui/options'
-require 'tictactoe/gui/qtgui/game_options'
-require 'tictactoe/gui/qtgui/timer'
+require 'tictactoe/gui/qtgui/widgets/result'
+require 'tictactoe/gui/qtgui/widgets/options'
+require 'tictactoe/gui/qtgui/widgets/game_options'
+require 'tictactoe/gui/qtgui/widgets/timer'
 
 module Tictactoe
   module Gui
@@ -13,11 +13,11 @@ module Tictactoe
           attr_reader :window
 
           def new_board(cell_count, on_move)
-            Widgets::Board.new(cell_count, on_move) 
+            Board.new(cell_count, on_move) 
           end
 
           def new_window(width, height)
-            @window = Widgets::Window.new(width, height)
+            @window = Window.new(width, height)
           end
 
           def new_result()
