@@ -1,11 +1,12 @@
 module Tictactoe
   module Gui
     module QtGui
-      class GameWindow
+      class GameGui
         def set_widget_factory(widget_factory)
           @widget_factory = widget_factory
           init
         end
+
         def set_board_size(size)
           @size = size * size
           init
@@ -27,19 +28,23 @@ module Tictactoe
         end
 
         def update(marks)
+          check
           @board.update(marks)
         end
 
         def announce(winner)
+          check
           @result.announce(winner)
         end
 
         def show()
+          check
           @timer.start()
           @window.show()
         end
 
         def close()
+          check
           @timer.stop()
           @window.close()
         end
@@ -55,6 +60,10 @@ module Tictactoe
 
           @window = @widget_factory.new_window()
           @widget_factory.layout(@window, [@board, @result, @play_again, @timer])
+        end
+
+        def check
+          raise "Not initialized completelly" unless @widget_factory && @on_select_option && @on_move && @on_tic && @size
         end
       end
     end
