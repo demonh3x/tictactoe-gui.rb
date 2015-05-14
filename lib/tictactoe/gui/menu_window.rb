@@ -2,11 +2,10 @@ require 'Qt'
 
 module Tictactoe
   module Gui
-    class MenuWindow < Qt::Widget
+    class MenuWindow 
       attr_reader :qt_window
 
       def initialize(start_callback)
-        super(nil)
         @start_callback = start_callback
         @options = {
           :x => :human,
@@ -14,7 +13,7 @@ module Tictactoe
           :board => 3,
         }
 
-        @qt_window = self
+        @qt_window = Qt::Widget.new
         @qt_window.object_name = "main_window"
         @qt_window.resize(240, 150)
 
