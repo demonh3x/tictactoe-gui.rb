@@ -1,15 +1,15 @@
-require 'tictactoe/gui/moves_buffer'
-
 module Tictactoe
   module Gui
     class GameWindow
-      def initialize(tictactoe, game_gui, on_play_again)
-        @ttt = tictactoe
-        @moves = MovesBuffer.new()
+      def initialize(game, game_gui, on_play_again)
+        @game = game
         @game_gui = game_gui
 
-        game_gui.set_board_size(@ttt.marks.length)
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(game_gui, mark)})
+
+        game_gui.set_board_size(game.marks.length)
         game_gui.on_play_again(on_play_again)
+
         game_gui.on_move(method(:on_move))
         game_gui.on_tic(method(:refresh))
       end
@@ -19,25 +19,24 @@ module Tictactoe
       end
 
       private
-      attr_reader :moves, :ttt, :game_gui
+      attr_reader :game, :game_gui
 
       def on_move(move)
-        moves.add(move)
         refresh()
       end
 
       def refresh()
-        ttt.tick(moves)
+        game.tick()
         refresh_board()
         refresh_result()
       end
 
       def refresh_board()
-        game_gui.update(ttt.marks)
+        game_gui.update(game.marks)
       end
 
       def refresh_result()
-        game_gui.announce(ttt.winner) if ttt.is_finished?()
+        game_gui.announce(game.winner) if game.is_finished?()
       end
     end
   end

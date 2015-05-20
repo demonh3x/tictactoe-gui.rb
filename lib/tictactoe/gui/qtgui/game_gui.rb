@@ -17,7 +17,7 @@ module Tictactoe
         end
 
         def on_move(listener)
-          @on_move = listener
+          on_move_hanlders << listener
           init
         end
 
@@ -49,15 +49,26 @@ module Tictactoe
         end
 
         private
+
+        def on_move_hanlders
+          @on_move_hanlders ||= []
+        end
+
+        def notify_on_move(move)
+          on_move_hanlders.each do |handler|
+            handler.call(move)
+          end
+        end
+
         def is_initialized?
-          @on_play_again && @on_move && @on_tic && @size
+          @on_play_again && @on_tic && @size
         end
 
         def init
           return unless is_initialized?
 
           @widget_factory = QtGui::Widgets::Factory.new()
-          @board = @widget_factory.new_board(@size, @on_move)
+          @board = @widget_factory.new_board(@size, method(:notify_on_move))
           @result = @widget_factory.new_result()
           @play_again = @widget_factory.new_options(
             {:play_again => "Play again", :close => "Close"},
