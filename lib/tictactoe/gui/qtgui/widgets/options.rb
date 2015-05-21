@@ -8,21 +8,19 @@ module Tictactoe
           attr_reader :layout
 
           def initialize(options, on_select)
-            @options = options
-            @on_select = on_select
+            self.options = options
+            self.on_select = on_select
           end
 
           def set_parent(parent)
-            @parent = parent
+            self.parent = parent
             init
           end
 
           private
-          def init
-            parent = @parent
-            on_select = @on_select
-            options = @options
+          attr_accessor :parent, :options, :on_select
 
+          def init
             buttons = options.map {|id, text| create_button(parent, id, text, on_select)}
             layout = create_layout(buttons)
 
@@ -38,13 +36,13 @@ module Tictactoe
           end
 
           def create_button(parent, id, text, on_select)
-            b = Qt::PushButton.new(parent)
-            b.object_name = id.to_s
-            b.text = text
-            b.connect(SIGNAL :clicked) do 
+            button = Qt::PushButton.new(parent)
+            button.object_name = id.to_s
+            button.text = text
+            button.connect(SIGNAL :clicked) do 
               on_select.call(id)
             end
-            b
+            button
           end
         end
       end

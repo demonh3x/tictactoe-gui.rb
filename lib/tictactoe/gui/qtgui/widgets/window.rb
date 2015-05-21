@@ -9,7 +9,7 @@ module Tictactoe
 
           def initialize(width, height)
             @root = create_root(width, height)
-            @layout = create_layout(@root, "main_layout")
+            self.layout = create_layout(root, "main_layout")
           end
 
           def close
@@ -28,7 +28,7 @@ module Tictactoe
           end
 
           private
-          attr_reader :layout
+          attr_accessor :layout
 
           def create_root(width, height)
             root = Qt::Widget.new()

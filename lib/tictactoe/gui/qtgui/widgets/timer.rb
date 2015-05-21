@@ -6,33 +6,30 @@ module Tictactoe
       module Widgets
         class Timer
           def initialize(on_tic)
-            @on_tic = on_tic
+            self.on_tic = on_tic
           end
 
           def set_parent(parent)
-            @parent = parent
+            self.parent = parent
             init
           end
 
           def start
-            @timer.start
+            timer.start
           end
 
           def stop
-            @timer.stop
+            timer.stop
           end
 
           private
+          attr_accessor :on_tic, :parent, :timer
+
           def init
-            parent = @parent
-            on_tic = @on_tic
-
-            timer = timer(parent, on_tic)
-
-            @timer = timer
+            self.timer = create_timer(parent, on_tic)
           end
 
-          def timer(parent, on_tic)
+          def create_timer(parent, on_tic)
             timer = Qt::Timer.new(parent)
             timer.object_name = 'timer'
             timer.connect(SIGNAL :timeout) do 

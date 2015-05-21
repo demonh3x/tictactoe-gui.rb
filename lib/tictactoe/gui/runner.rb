@@ -4,6 +4,7 @@ require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/game_window'
 require 'tictactoe/gui/qtgui/game_gui'
 require 'tictactoe/gui/qtgui/menu_gui'
+require 'tictactoe/gui/human_player'
 
 module Tictactoe
   module Gui
@@ -11,19 +12,15 @@ module Tictactoe
       attr_reader :menu, :game
 
       def initialize()
-        @app = Qt::Application.new(ARGV)
+        self.app = Qt::Application.new(ARGV)
 
         menu_gui = QtGui::MenuGui.new()
         menu = MenuWindow.new(menu_gui, lambda{|options|
           game_gui = QtGui::GameGui.new()
-          game = Gui::GameWindow.new(
-            create_game(options),
-            game_gui,
-            lambda{
-              menu.show
-            }
-          )
-          game.show
+
+          game = create_game(options)
+          game_window = Gui::GameWindow.new(game, game_gui, lambda{menu.show})
+          game_window.show
           @game = game_gui.qt_root
         })
         @menu = menu_gui.qt_root
@@ -35,14 +32,10 @@ module Tictactoe
       end
 
       private
-      attr_reader :app
+      attr_accessor :app
 
       def create_game(options)
-        ttt = Tictactoe::Game.new
-        ttt.set_board_size(options[:board])
-        ttt.set_player_x(options[:x])
-        ttt.set_player_o(options[:o])
-        ttt
+        Tictactoe::Game.new(options[:board], options[:x], options[:o])
       end
     end
   end
