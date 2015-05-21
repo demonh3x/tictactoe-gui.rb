@@ -8,20 +8,19 @@ module Tictactoe
           attr_reader :layout
 
           def initialize(on_select)
-            @selection = {}
-            @on_select = on_select
+            self.selection = {}
+            self.on_select = on_select
           end
 
           def set_parent(parent)
-            @parent = parent
+            self.parent = parent
             init
           end
 
           private
-          def init
-            parent = @parent
-            on_select = @on_select
+          attr_accessor :parent, :on_select, :selection
 
+          def init
             layout = new_main_layout
             layout.add_widget(widget_x_selector(parent), 0, 0, 1, 1)
             layout.add_widget(widget_o_selector(parent), 0, 1, 1, 1)
@@ -29,7 +28,7 @@ module Tictactoe
             ws = widget_start(
               parent,
               lambda{
-                on_select.call(@selection)
+                on_select.call(selection)
               }
             )
             layout.add_widget(ws, 1, 0, 1, 3)
@@ -85,7 +84,7 @@ module Tictactoe
               option.object_name = id.to_s
               option.text = text
               select = lambda{
-                selection_fn.call(@selection)
+                selection_fn.call(selection)
                 option.checked = true
               }
               option.connect(SIGNAL :clicked) do
@@ -100,13 +99,13 @@ module Tictactoe
           end
 
           def widget_start(parent, on_click)
-            b = Qt::PushButton.new(parent)
-            b.object_name = "start"
-            b.text = "Start game"
-            b.connect(SIGNAL :clicked) do
+            button = Qt::PushButton.new(parent)
+            button.object_name = "start"
+            button.text = "Start game"
+            button.connect(SIGNAL :clicked) do
               on_click.call()
             end
-            b
+            button
           end
         end
       end

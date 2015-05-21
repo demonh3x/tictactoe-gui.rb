@@ -8,8 +8,8 @@ module Tictactoe
           attr_reader :layout
 
           def initialize(cell_count, on_move)
-            @cell_count = cell_count
-            @on_move = on_move
+            self.cell_count = cell_count
+            self.on_move = on_move
             init
           end
 
@@ -23,17 +23,11 @@ module Tictactoe
           end
 
           private
-          attr_reader :cells
+          attr_accessor :cell_count, :on_move, :cells
 
           def init
-            cell_count = @cell_count
-            on_move = @on_move
-
-            cells = create_cells(cell_count, on_move)
-            layout = layout_board(cells)
-
-            @cells = cells
-            @layout = layout
+            self.cells = create_cells(cell_count, on_move)
+            @layout = layout_board(cells)
           end
 
           def create_cells(cell_count, on_move)

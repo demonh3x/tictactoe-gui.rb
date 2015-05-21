@@ -7,48 +7,49 @@ module Tictactoe
         attr_reader :qt_root
 
         def set_board_size(size)
-          @size = size
+          self.size = size
           init
         end
 
-        def on_play_again(listener)
-          @on_play_again = listener
+        def on_play_again(handler)
+          self.on_play_again_handler = handler
           init
         end
 
-        def on_move(listener)
-          on_move_hanlders << listener
+        def on_move(handler)
+          on_move_hanlders << handler
           init
         end
 
-        def on_tic(listener)
-          @on_tic = listener
+        def on_tic(handler)
+          self.on_tic_handler = handler
           init
         end
 
         def update(marks)
           check
-          @board.update(marks)
+          board.update(marks)
         end
 
         def announce(winner)
           check
-          @result.announce(winner)
+          result.announce(winner)
         end
 
-        def show()
+        def show
           check
-          @timer.start()
-          @window.show()
+          timer.start
+          window.show
         end
 
-        def close()
+        def close
           check
-          @timer.stop()
-          @window.close()
+          timer.stop
+          window.close
         end
 
         private
+        attr_accessor :size, :on_play_again_handler, :on_tic_handler, :board, :play_again, :result, :timer, :window
 
         def on_move_hanlders
           @on_move_hanlders ||= []
@@ -61,28 +62,28 @@ module Tictactoe
         end
 
         def is_initialized?
-          @on_play_again && @on_tic && @size
+          on_play_again_handler && on_tic_handler && size
         end
 
         def init
           return unless is_initialized?
 
-          @widget_factory = QtGui::Widgets::Factory.new()
-          @board = @widget_factory.new_board(@size, method(:notify_on_move))
-          @result = @widget_factory.new_result()
-          @play_again = @widget_factory.new_options(
+          widget_factory = QtGui::Widgets::Factory.new()
+          self.board = widget_factory.new_board(size, method(:notify_on_move))
+          self.result = widget_factory.new_result()
+          self.play_again = widget_factory.new_options(
             {:play_again => "Play again", :close => "Close"},
             lambda{|selection|
               close()
-              @on_play_again.call() if selection == :play_again
+              on_play_again_handler.call() if selection == :play_again
             }
           )
-          @timer = @widget_factory.new_timer(@on_tic)
+          self.timer = widget_factory.new_timer(on_tic_handler)
 
-          @window = @widget_factory.new_window(240, 340)
-          @window.add(@board, @result, @play_again, @timer)
+          self.window = widget_factory.new_window(240, 340)
+          window.add(board, result, play_again, timer)
 
-          @qt_root = @window.root
+          @qt_root = window.root
         end
 
         def check

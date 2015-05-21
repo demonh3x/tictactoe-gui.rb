@@ -14,29 +14,29 @@ module Tictactoe
         game_gui.on_tic(method(:refresh))
       end
 
-      def show()
-        game_gui.show()
+      def show
+        game_gui.show
       end
 
       private
       attr_reader :game, :game_gui
 
       def on_move(move)
-        refresh()
+        refresh
       end
 
-      def refresh()
-        game.tick()
-        refresh_board()
-        refresh_result()
+      def refresh
+        game.tick
+        refresh_board
+        refresh_result
       end
 
-      def refresh_board()
+      def refresh_board
         game_gui.update(game.marks)
       end
 
-      def refresh_result()
-        game_gui.announce(game.winner) if game.is_finished?()
+      def refresh_result
+        game_gui.announce(game.winner) if game.is_finished?
       end
     end
   end
