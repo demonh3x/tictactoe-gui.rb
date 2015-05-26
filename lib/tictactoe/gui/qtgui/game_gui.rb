@@ -23,8 +23,8 @@ module Tictactoe
           init
         end
 
-        def on_tic(observer)
-          self.on_tic_observer = observer
+        def on_tick(observer)
+          self.on_tick_observer = observer
           init
         end
 
@@ -52,7 +52,7 @@ module Tictactoe
 
         private
         attr_accessor :widget_factory
-        attr_accessor :size, :on_play_again_observer, :on_tic_observer, :board, :play_again, :result, :timer, :window
+        attr_accessor :size, :on_play_again_observer, :on_tick_observer, :board, :play_again, :result, :timer, :window
 
         def on_move_observers
           @on_move_observers ||= []
@@ -65,7 +65,7 @@ module Tictactoe
         end
 
         def is_initialized?
-          on_play_again_observer && on_tic_observer && size
+          on_play_again_observer && on_tick_observer && size
         end
 
         def init
@@ -80,7 +80,7 @@ module Tictactoe
               on_play_again_observer.call() if selection == :play_again
             }
           )
-          self.timer = widget_factory.new_timer(on_tic_observer)
+          self.timer = widget_factory.new_timer(on_tick_observer)
 
           self.window = widget_factory.new_window(240, 340)
           window.add(board, result, play_again, timer)

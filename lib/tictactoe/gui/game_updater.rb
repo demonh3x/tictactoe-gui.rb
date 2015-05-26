@@ -13,7 +13,7 @@ module Tictactoe
       end
 
       def receive_ticks_from(clock)
-        clock.on_tic(method(:update))
+        clock.on_tick(method(:update))
         self
       end
 
