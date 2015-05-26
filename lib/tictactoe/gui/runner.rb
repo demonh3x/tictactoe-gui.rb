@@ -1,6 +1,6 @@
 require 'Qt'
 require 'tictactoe/game'
-require 'tictactoe/gui/game_window'
+require 'tictactoe/gui/game_updater'
 require 'tictactoe/gui/qtgui/game_gui'
 require 'tictactoe/gui/qtgui/menu_gui'
 require 'tictactoe/gui/qtgui/widgets/factory'
@@ -30,7 +30,7 @@ module Tictactoe
       attr_accessor :menu_gui, :game_gui
 
       attr_accessor :app, :widget_factory
-      attr_accessor :menu_window, :game_window
+      attr_accessor :menu_window
 
       def initialize_framework
         self.app = Qt::Application.new(ARGV)
@@ -53,8 +53,9 @@ module Tictactoe
         game = create_game(options, game_gui)
         game_gui.set_board_size(game.marks.length)
 
-        self.game_window = Gui::GameWindow.new(game, game_gui)
-        game_window.show
+        game_updater = Gui::GameUpdater.new(game, game_gui)
+        game_gui.on_tic(game_updater.method(:update))
+        game_gui.show
       end
 
       def create_game(options, game_gui)

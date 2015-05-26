@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'tictactoe/gui/game_window'
+require 'tictactoe/gui/game_updater'
 require 'tictactoe/gui/qtgui/game_gui'
 require 'tictactoe/gui/qtgui/widgets/factory'
 
-RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
+RSpec.describe Tictactoe::Gui::GameUpdater, :integration => true, :gui => true do
   before(:each) do
     Qt::Application.new(ARGV)
   end
@@ -13,8 +13,8 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
     game_gui = Tictactoe::Gui::QtGui::GameGui.new(widget_factory)
     game_gui.on_play_again(lambda{})
     game_gui.set_board_size(ttt.marks.length)
-    game_window = described_class.new(ttt, game_gui)
-    game_window.show
+    game_updater = described_class.new(ttt, game_gui)
+    game_gui.on_tic(game_updater.method(:update))
     game_gui
   end
 
