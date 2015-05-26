@@ -13,18 +13,18 @@ module Tictactoe
           init
         end
 
-        def on_play_again(handler)
-          self.on_play_again_handler = handler
+        def on_play_again(observer)
+          self.on_play_again_observer = observer
           init
         end
 
-        def on_move(handler)
-          on_move_hanlders << handler
+        def on_move(observer)
+          on_move_observers << observer
           init
         end
 
-        def on_tic(handler)
-          self.on_tic_handler = handler
+        def on_tic(observer)
+          self.on_tic_observer = observer
           init
         end
 
@@ -52,20 +52,20 @@ module Tictactoe
 
         private
         attr_accessor :widget_factory
-        attr_accessor :size, :on_play_again_handler, :on_tic_handler, :board, :play_again, :result, :timer, :window
+        attr_accessor :size, :on_play_again_observer, :on_tic_observer, :board, :play_again, :result, :timer, :window
 
-        def on_move_hanlders
-          @on_move_hanlders ||= []
+        def on_move_observers
+          @on_move_observers ||= []
         end
 
         def notify_on_move(move)
-          on_move_hanlders.each do |handler|
-            handler.call(move)
+          on_move_observers.each do |observer|
+            observer.call(move)
           end
         end
 
         def is_initialized?
-          on_play_again_handler && on_tic_handler && size
+          on_play_again_observer && on_tic_observer && size
         end
 
         def init
@@ -77,10 +77,10 @@ module Tictactoe
             {:play_again => "Play again", :close => "Close"},
             lambda{|selection|
               close()
-              on_play_again_handler.call() if selection == :play_again
+              on_play_again_observer.call() if selection == :play_again
             }
           )
-          self.timer = widget_factory.new_timer(on_tic_handler)
+          self.timer = widget_factory.new_timer(on_tic_observer)
 
           self.window = widget_factory.new_window(240, 340)
           window.add(board, result, play_again, timer)
