@@ -6,8 +6,9 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(gui, "timer").timeout
   end
 
-  def click_cell(gui, index)
-    find(gui, "cell_#{index}").click
+  def make_move(gui, cell_index)
+    find(gui, "cell_#{cell_index}").click
+    tick(gui)
   end
 
   it 'creates a Qt application' do
@@ -26,12 +27,12 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(menu, "start").click
     game = app.game
 
-    click_cell(game, 0) #x
-    click_cell(game, 3) #o
-    click_cell(game, 1) #x
-    click_cell(game, 4) #o
+    make_move(game, 0) #x
+    make_move(game, 3) #o
+    make_move(game, 1) #x
+    make_move(game, 4) #o
     expect(find(game, "result").text).to eq(nil)
-    click_cell(game, 2) #x
+    make_move(game, 2) #x
     expect(find(game, "result").text).to eq('Player X has won.')
   end
 
@@ -45,14 +46,14 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(menu, "start").click
     game = app.game
 
-    click_cell(game, 0) #x
-    click_cell(game, 4) #o
-    click_cell(game, 1) #x
-    click_cell(game, 5) #o
-    click_cell(game, 2) #x
-    click_cell(game, 6) #o
+    make_move(game, 0) #x
+    make_move(game, 4) #o
+    make_move(game, 1) #x
+    make_move(game, 5) #o
+    make_move(game, 2) #x
+    make_move(game, 6) #o
     expect(find(game, "result").text).to eq(nil)
-    click_cell(game, 3) #x
+    make_move(game, 3) #x
     expect(find(game, "result").text).to eq('Player X has won.')
   end
 
@@ -101,11 +102,11 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(menu, "start").click
     game = app.game
 
-    click_cell(game, 0) #x
-    click_cell(game, 3) #o
-    click_cell(game, 1) #x
-    click_cell(game, 4) #o
-    click_cell(game, 2) #x
+    make_move(game, 0) #x
+    make_move(game, 3) #o
+    make_move(game, 1) #x
+    make_move(game, 4) #o
+    make_move(game, 2) #x
 
     expect(game.visible).to eq(true)
     expect(menu.visible).to eq(false)
@@ -125,11 +126,11 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
     find(menu, "start").click
     game = app.game
 
-    click_cell(game, 0) #x
-    click_cell(game, 3) #o
-    click_cell(game, 1) #x
-    click_cell(game, 4) #o
-    click_cell(game, 2) #x
+    make_move(game, 0) #x
+    make_move(game, 3) #o
+    make_move(game, 1) #x
+    make_move(game, 4) #o
+    make_move(game, 2) #x
 
     expect(game.visible).to eq(true)
     expect(menu.visible).to eq(false)

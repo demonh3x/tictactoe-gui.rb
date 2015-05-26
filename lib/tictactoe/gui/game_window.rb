@@ -10,7 +10,6 @@ module Tictactoe
         game.register_human_factory(lambda{|mark| HumanPlayer.new(game_gui, mark)})
 
         game_gui.set_board_size(game.marks.length)
-        game_gui.on_move(method(:on_move))
         game_gui.on_tic(method(:refresh))
 
         game_gui.show
@@ -18,10 +17,6 @@ module Tictactoe
 
       private
       attr_accessor :game, :game_gui
-
-      def on_move(move)
-        refresh
-      end
 
       def refresh
         game.tick
