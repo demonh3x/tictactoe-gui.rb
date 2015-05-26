@@ -23,12 +23,12 @@ RSpec.describe Tictactoe::Gui::HumanPlayer do
 
   let(:mark)   {:mark}
   let(:gui)    {FakeGui.new}
-  let(:player) {described_class.new(mark).register_to(gui)}
+  let(:player) {described_class.new(mark).receive_moves_from(gui)}
   let(:state)  {FakeState.new([1, 2, 3])}
 
   it 'registers a callback on gui' do
     player
-    expect(gui.callback).to eq(player.method(:on_move))
+    expect(gui.callback).to eq(player.method(:has_moved_to))
   end
 
   it 'returns the move from the gui' do

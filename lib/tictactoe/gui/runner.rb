@@ -59,7 +59,7 @@ module Tictactoe
 
       def create_game(options, game_gui)
         game = Tictactoe::Game.new(options[:board], options[:x], options[:o])
-        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).register_to(game_gui)})
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).receive_moves_from(game_gui)})
         game
       end
 

@@ -7,8 +7,12 @@ module Tictactoe
         self.mark = mark
       end
 
-      def register_to(subject)
-        subject.on_move(method(:on_move))
+      def has_moved_to(move)
+        moves << move
+      end
+
+      def receive_moves_from(user)
+        user.on_move(method(:has_moved_to))
         self
       end
 
@@ -18,10 +22,6 @@ module Tictactoe
 
       private
       attr_writer :mark
-
-      def on_move(move)
-        moves << move
-      end
 
       def moves
         @moves ||= []
