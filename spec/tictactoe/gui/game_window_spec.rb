@@ -12,6 +12,7 @@ RSpec.describe Tictactoe::Gui::GameWindow, :integration => true, :gui => true do
     widget_factory = Tictactoe::Gui::QtGui::Widgets::Factory.new()
     game_gui = Tictactoe::Gui::QtGui::GameGui.new(widget_factory)
     game_gui.on_play_again(lambda{})
+    game_gui.set_board_size(ttt.marks.length)
     game_window = described_class.new(ttt, game_gui)
     game_window.show
     game_gui

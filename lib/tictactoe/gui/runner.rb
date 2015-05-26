@@ -10,10 +10,8 @@ module Tictactoe
   module Gui
     class Runner
       def initialize()
-        self.app = Qt::Application.new(ARGV)
-        self.widget_factory = QtGui::Widgets::Factory.new()
-
-        create_menu_window
+        initialize_framework
+        show_menu_window
       end
 
       def run
@@ -34,31 +32,35 @@ module Tictactoe
       attr_accessor :app, :widget_factory
       attr_accessor :menu_window, :game_window
 
-      def create_menu_window
+      def initialize_framework
+        self.app = Qt::Application.new(ARGV)
+        self.widget_factory = QtGui::Widgets::Factory.new()
+      end
+
+      def show_menu_window
         self.menu_window = create_menu_gui
         menu_window.show
       end
 
       def create_menu_gui
         self.menu_gui = QtGui::MenuGui.new(widget_factory)
-        menu_gui.on_configured(method(:create_game_window))
+        menu_gui.on_configured(method(:show_game_window))
         menu_gui
       end
 
-      def create_game_window(options)
-        game = create_game(options)
+      def show_game_window(options)
         game_gui = create_game_gui
-
+        game = create_game(options, game_gui)
+        game_gui.set_board_size(game.marks.length)
 
         self.game_window = Gui::GameWindow.new(game, game_gui)
-        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).register_to(game_gui)})
-
-        game_gui.set_board_size(game.marks.length)
         game_window.show
       end
 
-      def create_game(options)
-        Tictactoe::Game.new(options[:board], options[:x], options[:o])
+      def create_game(options, game_gui)
+        game = Tictactoe::Game.new(options[:board], options[:x], options[:o])
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).register_to(game_gui)})
+        game
       end
 
       def create_game_gui
