@@ -21,7 +21,8 @@ module Tictactoe
           game_gui = QtGui::GameGui.new(widget_factory)
 
           game = create_game(options)
-          game_window = Gui::GameWindow.new(game, game_gui, lambda{menu.show})
+          game_gui.on_play_again(lambda{menu.show})
+          game_window = Gui::GameWindow.new(game, game_gui)
           game_window.show
           @game = game_gui.qt_root
         })
