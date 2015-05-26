@@ -12,6 +12,11 @@ module Tictactoe
         update_result
       end
 
+      def receive_ticks_from(clock)
+        clock.on_tic(method(:update))
+        self
+      end
+
       private
       attr_accessor :game, :gui
 

@@ -53,8 +53,7 @@ module Tictactoe
         game = create_game(options, game_gui)
         game_gui.set_board_size(game.marks.length)
 
-        game_updater = Gui::GameUpdater.new(game, game_gui)
-        game_gui.on_tic(game_updater.method(:update))
+        Gui::GameUpdater.new(game, game_gui).receive_ticks_from(game_gui)
         game_gui.show
       end
 
