@@ -1,10 +1,12 @@
-require 'tictactoe/gui/qtgui/widgets/factory'
-
 module Tictactoe
   module Gui
     module QtGui
       class GameGui
         attr_reader :qt_root
+
+        def initialize(widget_factory)
+          @widget_factory = widget_factory
+        end
 
         def set_board_size(size)
           self.size = size
@@ -49,6 +51,7 @@ module Tictactoe
         end
 
         private
+        attr_accessor :widget_factory
         attr_accessor :size, :on_play_again_handler, :on_tic_handler, :board, :play_again, :result, :timer, :window
 
         def on_move_hanlders
@@ -68,7 +71,6 @@ module Tictactoe
         def init
           return unless is_initialized?
 
-          widget_factory = QtGui::Widgets::Factory.new()
           self.board = widget_factory.new_board(size, method(:notify_on_move))
           self.result = widget_factory.new_result()
           self.play_again = widget_factory.new_options(
