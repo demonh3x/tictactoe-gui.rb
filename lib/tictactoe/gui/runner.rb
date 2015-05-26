@@ -16,7 +16,7 @@ module Tictactoe
         self.app = Qt::Application.new(ARGV)
 
         widget_factory = QtGui::Widgets::Factory.new()
-        menu_gui = QtGui::MenuGui.new()
+        menu_gui = QtGui::MenuGui.new(widget_factory)
         menu = MenuWindow.new(menu_gui, lambda{|options|
           game_gui = QtGui::GameGui.new(widget_factory)
 
