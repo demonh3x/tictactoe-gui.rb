@@ -9,35 +9,66 @@ require 'tictactoe/gui/human_player'
 module Tictactoe
   module Gui
     class Runner
-      attr_reader :menu, :game
-
       def initialize()
         self.app = Qt::Application.new(ARGV)
+        self.widget_factory = QtGui::Widgets::Factory.new()
 
-        widget_factory = QtGui::Widgets::Factory.new()
-        menu_gui = QtGui::MenuGui.new(widget_factory)
-        menu_gui.on_configured(lambda{|options|
-          game_gui = QtGui::GameGui.new(widget_factory)
-
-          game = create_game(options)
-          game_gui.on_play_again(lambda{menu_gui.show})
-          game_window = Gui::GameWindow.new(game, game_gui)
-          game_window.show
-          @game = game_gui.qt_root
-        })
-        @menu = menu_gui.qt_root
+        create_menu_window
       end
 
       def run
-        menu.show
         app.exec
       end
 
+      def qt_menu
+        menu_gui.qt_root
+      end
+
+      def qt_game
+        game_gui.qt_root
+      end
+
       private
-      attr_accessor :app
+      attr_accessor :menu_gui, :game_gui
+
+      attr_accessor :app, :widget_factory
+      attr_accessor :menu_window, :game_window
+
+      def create_menu_window
+        self.menu_window = create_menu_gui
+        menu_window.show
+      end
+
+      def create_menu_gui
+        self.menu_gui = QtGui::MenuGui.new(widget_factory)
+        menu_gui.on_configured(method(:create_game_window))
+        menu_gui
+      end
+
+      def create_game_window(options)
+        game = create_game(options)
+        game_gui = create_game_gui
+
+
+        self.game_window = Gui::GameWindow.new(game, game_gui)
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).register_to(game_gui)})
+
+        game_gui.set_board_size(game.marks.length)
+        game_window.show
+      end
 
       def create_game(options)
         Tictactoe::Game.new(options[:board], options[:x], options[:o])
+      end
+
+      def create_game_gui
+        self.game_gui = QtGui::GameGui.new(widget_factory)
+        game_gui.on_play_again(method(:show_menu))
+        game_gui
+      end
+
+      def show_menu
+        menu_window.show
       end
     end
   end
