@@ -1,17 +1,16 @@
 require 'spec_helper'
-require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/qtgui/menu_gui'
 require 'tictactoe/gui/qtgui/widgets/factory'
 
-RSpec.describe Tictactoe::Gui::MenuWindow, :integration => true, :gui => true do
+RSpec.describe Tictactoe::Gui::QtGui::MenuGui, :integration => true, :gui => true do
   before(:each) do
     Qt::Application.new(ARGV)
   end
 
   def create(start_callback)
     widget_factory = Tictactoe::Gui::QtGui::Widgets::Factory.new()
-    menu_gui = Tictactoe::Gui::QtGui::MenuGui.new(widget_factory)
-    described_class.new(menu_gui, start_callback)
+    menu_gui = described_class.new(widget_factory)
+    menu_gui.on_configured(start_callback)
     menu_gui.qt_root
   end
 
