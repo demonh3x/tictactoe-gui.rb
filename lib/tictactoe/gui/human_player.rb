@@ -3,9 +3,13 @@ module Tictactoe
     class HumanPlayer
       attr_reader :mark
 
-      def initialize(gui, mark)
-        register_handler_for(gui)
-        @mark = mark
+      def initialize(mark)
+        self.mark = mark
+      end
+
+      def register_to(subject)
+        subject.on_move(method(:on_move))
+        self
       end
 
       def get_move(state)
@@ -13,16 +17,14 @@ module Tictactoe
       end
 
       private
+      attr_writer :mark
+
       def on_move(move)
         moves << move
       end
 
       def moves
         @moves ||= []
-      end
-
-      def register_handler_for(gui)
-        gui.on_move(method(:on_move))
       end
     end
   end

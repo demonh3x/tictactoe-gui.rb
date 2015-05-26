@@ -23,7 +23,7 @@ RSpec.describe Tictactoe::Gui::HumanPlayer do
 
   let(:mark)   {:mark}
   let(:gui)    {FakeGui.new}
-  let(:player) {described_class.new(gui, mark)}
+  let(:player) {described_class.new(mark).register_to(gui)}
   let(:state)  {FakeState.new([1, 2, 3])}
 
   it 'registers a callback on gui' do

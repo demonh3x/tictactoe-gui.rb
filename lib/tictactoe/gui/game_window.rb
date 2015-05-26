@@ -7,7 +7,7 @@ module Tictactoe
       end
 
       def show
-        game.register_human_factory(lambda{|mark| HumanPlayer.new(game_gui, mark)})
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(mark).register_to(game_gui)})
 
         game_gui.set_board_size(game.marks.length)
         game_gui.on_tic(method(:refresh))
