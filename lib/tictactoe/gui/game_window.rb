@@ -2,23 +2,22 @@ module Tictactoe
   module Gui
     class GameWindow
       def initialize(game, game_gui)
-        @game = game
-        @game_gui = game_gui
-
-        game.register_human_factory(lambda{|mark| HumanPlayer.new(game_gui, mark)})
-
-        game_gui.set_board_size(game.marks.length)
-
-        game_gui.on_move(method(:on_move))
-        game_gui.on_tic(method(:refresh))
+        self.game = game
+        self.game_gui = game_gui
       end
 
       def show
+        game.register_human_factory(lambda{|mark| HumanPlayer.new(game_gui, mark)})
+
+        game_gui.set_board_size(game.marks.length)
+        game_gui.on_move(method(:on_move))
+        game_gui.on_tic(method(:refresh))
+
         game_gui.show
       end
 
       private
-      attr_reader :game, :game_gui
+      attr_accessor :game, :game_gui
 
       def on_move(move)
         refresh
