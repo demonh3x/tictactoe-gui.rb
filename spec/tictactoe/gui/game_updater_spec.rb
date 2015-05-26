@@ -13,8 +13,7 @@ RSpec.describe Tictactoe::Gui::GameUpdater, :integration => true, :gui => true d
     game_gui = Tictactoe::Gui::QtGui::GameGui.new(widget_factory)
     game_gui.on_play_again(lambda{})
     game_gui.set_board_size(ttt.marks.length)
-    game_updater = described_class.new(ttt, game_gui)
-    game_gui.on_tic(game_updater.method(:update))
+    game_updater = described_class.new(ttt, game_gui).receive_ticks_from(game_gui)
     game_gui
   end
 
