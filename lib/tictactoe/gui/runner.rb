@@ -1,6 +1,5 @@
 require 'Qt'
 require 'tictactoe/game'
-require 'tictactoe/gui/menu_window'
 require 'tictactoe/gui/game_window'
 require 'tictactoe/gui/qtgui/game_gui'
 require 'tictactoe/gui/qtgui/menu_gui'
@@ -17,11 +16,11 @@ module Tictactoe
 
         widget_factory = QtGui::Widgets::Factory.new()
         menu_gui = QtGui::MenuGui.new(widget_factory)
-        menu = MenuWindow.new(menu_gui, lambda{|options|
+        menu_gui.on_configured(lambda{|options|
           game_gui = QtGui::GameGui.new(widget_factory)
 
           game = create_game(options)
-          game_gui.on_play_again(lambda{menu.show})
+          game_gui.on_play_again(lambda{menu_gui.show})
           game_window = Gui::GameWindow.new(game, game_gui)
           game_window.show
           @game = game_gui.qt_root
