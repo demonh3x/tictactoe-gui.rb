@@ -42,5 +42,4 @@ RSpec.describe Tictactoe::Gui::HumanPlayer do
     actual_self = player.receive_moves_from(gui)
     expect(actual_self).to eq(player)
   end
-
 end
