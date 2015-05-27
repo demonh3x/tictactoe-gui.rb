@@ -1,30 +1,26 @@
 require 'spec_helper'
+require 'user_interactions'
 require 'tictactoe/gui/qtgui/menu_gui'
 require 'tictactoe/gui/qtgui/widgets/factory'
 
 RSpec.describe Tictactoe::Gui::QtGui::MenuGui, :integration => true, :gui => true do
-  before(:each) do
-    Qt::Application.new(ARGV)
-  end
-
-  def create(start_callback)
-    widget_factory = Tictactoe::Gui::QtGui::Widgets::Factory.new()
-    menu_gui = described_class.new(widget_factory)
-    menu_gui.on_configured(start_callback)
+  def qt_menu
     widget_factory.created_windows.first.root
   end
 
+  let(:start_callback)  { spy() }
+  let(:widget_factory)  { Tictactoe::Gui::QtGui::Widgets::Factory.new }
+  let(:menu_gui)        { described_class.new(widget_factory).on_configured(start_callback) }
+  let(:ui)              { menu_gui; UserInteractions.new(method(:qt_menu), nil) }
+
   it 'has the default options selected' do
-    menu = create(spy())
-    expect(find(menu, "x_human").checked).to eq(true)
-    expect(find(menu, "o_human").checked).to eq(true)
-    expect(find(menu, "board_3").checked).to eq(true)
+    expect(ui.is_selected?(:x, :human)).to eq(true)
+    expect(ui.is_selected?(:o, :human)).to eq(true)
+    expect(ui.is_selected?(:board, 3)).to eq(true)
   end
 
   it 'sends the default options to the callback' do
-    start_callback = spy()
-    menu = create(start_callback)
-    find(menu, "start").click
+    ui.start_game
     default_options = {
       :x => :human,
       :o => :human,
@@ -35,12 +31,10 @@ RSpec.describe Tictactoe::Gui::QtGui::MenuGui, :integration => true, :gui => tru
 
   describe 'sends the different options when selected' do
     it 'x is computer, o is human, board of size 4' do
-      start_callback = spy()
-      menu = create(start_callback)
-      find(menu, "x_computer").click
-      find(menu, "o_human").click
-      find(menu, "board_4").click
-      find(menu, "start").click
+      ui.select(:x, :computer)
+      ui.select(:o, :human)
+      ui.select(:board, 4)
+      ui.start_game
       selected_options = {
         :x => :computer,
         :o => :human,
@@ -50,12 +44,10 @@ RSpec.describe Tictactoe::Gui::QtGui::MenuGui, :integration => true, :gui => tru
     end
 
     it 'x is human, o is computer, board of size 3' do
-      start_callback = spy()
-      menu = create(start_callback)
-      find(menu, "x_human").click
-      find(menu, "o_computer").click
-      find(menu, "board_3").click
-      find(menu, "start").click
+      ui.select(:x, :human)
+      ui.select(:o, :computer)
+      ui.select(:board, 3)
+      ui.start_game
       selected_options = {
         :x => :human,
         :o => :computer,
