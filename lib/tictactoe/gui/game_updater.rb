@@ -7,9 +7,8 @@ module Tictactoe
       end
 
       def update
-        update_game
-        update_board
-        update_result
+        advance_game
+        update_state
       end
 
       def receive_ticks_from(clock)
@@ -19,17 +18,15 @@ module Tictactoe
 
       private
       attr_accessor :game, :gui
+      attr_accessor :previous_state
 
-      def update_game
+      def advance_game
         game.tick
       end
 
-      def update_board
-        gui.update(game.marks)
-      end
-
-      def update_result
-        gui.announce(game.winner) if game.is_finished?
+      def update_state
+        gui.update(game.state) if game.state != previous_state
+        self.previous_state = game.state
       end
     end
   end
