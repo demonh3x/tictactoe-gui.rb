@@ -11,7 +11,7 @@ RSpec.describe Tictactoe::Gui::QtGui::MenuGui, :integration => true, :gui => tru
     widget_factory = Tictactoe::Gui::QtGui::Widgets::Factory.new()
     menu_gui = described_class.new(widget_factory)
     menu_gui.on_configured(start_callback)
-    menu_gui.qt_root
+    widget_factory.created_windows.first.root
   end
 
   it 'has the default options selected' do

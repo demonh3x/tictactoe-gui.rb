@@ -2,8 +2,6 @@ module Tictactoe
   module Gui
     module QtGui
       class GameGui
-        attr_reader :qt_root
-
         def initialize(widget_factory)
           @widget_factory = widget_factory
         end
@@ -80,8 +78,6 @@ module Tictactoe
 
           self.window = widget_factory.new_window(240, 340)
           window.add(board, result, play_again, timer)
-
-          @qt_root = window.root
         end
 
         def check

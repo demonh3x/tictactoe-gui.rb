@@ -19,11 +19,11 @@ module Tictactoe
       end
 
       def qt_menu
-        menu_gui.qt_root
+        widget_factory.created_windows.first.root
       end
 
       def qt_game
-        game_gui.qt_root
+        widget_factory.created_windows.last.root
       end
 
       private

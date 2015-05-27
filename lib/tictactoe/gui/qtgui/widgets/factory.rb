@@ -15,7 +15,13 @@ module Tictactoe
           end
 
           def new_window(width, height)
-            Window.new(width, height)
+            window = Window.new(width, height)
+            created_windows << window
+            window
+          end
+
+          def created_windows
+            @windows ||= []
           end
 
           def new_result()

@@ -2,8 +2,6 @@ module Tictactoe
   module Gui
     module QtGui
       class MenuGui
-        attr_reader :qt_root
-
         def initialize(widget_factory)
           @widget_factory = widget_factory
         end
@@ -28,8 +26,6 @@ module Tictactoe
             on_configured_handler.call(options)
           })
           window.add(game_options)
-
-          @qt_root = window.root
         end
       end
     end
