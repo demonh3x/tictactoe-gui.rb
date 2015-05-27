@@ -28,14 +28,10 @@ module Tictactoe
           init
         end
 
-        def update(marks)
+        def update(state)
           check
-          board.update(marks)
-        end
-
-        def announce(winner)
-          check
-          result.announce(winner)
+          update_board(state)
+          update_result(state)
         end
 
         def show
@@ -90,6 +86,14 @@ module Tictactoe
 
         def check
           raise "Not initialized completelly" unless is_initialized?
+        end
+
+        def update_board(state)
+          board.update(state.marks)
+        end
+
+        def update_result(state)
+          result.announce(state.winner) if state.is_finished?
         end
       end
     end
