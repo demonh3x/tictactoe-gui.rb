@@ -24,10 +24,6 @@ module Tictactoe
             window
           end
 
-          def created_windows
-            @windows ||= []
-          end
-
           def new_result()
             Result.new()
           end
@@ -46,6 +42,10 @@ module Tictactoe
 
           def start_event_loop
             app.exec
+          end
+
+          def created_windows #testing scaffolding
+            @windows ||= []
           end
 
           private
