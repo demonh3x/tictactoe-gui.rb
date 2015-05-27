@@ -20,18 +20,18 @@ module Tictactoe
 
       private
       attr_accessor :framework
-      attr_accessor :menu_gui
+      attr_accessor :menu_window
 
       def show_windows
-        self.menu_gui = create_menu_gui
-        menu_gui.show
+        self.menu_window = create_menu_window
+        menu_window.show
       end
 
-      def create_menu_gui
-        menu_gui = QtGui::MenuGui.new(framework)
-        menu_gui.on_configured(method(:show_game))
+      def create_menu_window
+        menu_window = QtGui::MenuGui.new(framework)
+        menu_window.on_configured(method(:show_game))
 
-        menu_gui
+        menu_window
       end
 
       def show_game(options)
@@ -49,8 +49,8 @@ module Tictactoe
       end
 
       def create_game_gui(options)
-        game_gui.on_play_again(lambda{menu_gui.show})
         game_gui = QtGui::GameGui.new(framework, options[:board])
+        game_gui.on_play_again(lambda{menu_window.show})
 
         game_gui
       end
