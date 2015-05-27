@@ -1,13 +1,14 @@
 require 'spec_helper'
 require 'tictactoe/gui/runner'
+require 'tictactoe/gui/qtgui/widgets/factory'
 
 RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   def tick
-    find(runner.qt_game, "timer").timeout
+    find(qt_game, "timer").timeout
   end
 
   def click_cell(cell_index)
-    find(runner.qt_game, "cell_#{cell_index}").click
+    find(qt_game, "cell_#{cell_index}").click
   end
 
   def make_move(cell_index)
@@ -16,35 +17,47 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   def select(option, value)
-    find(runner.qt_menu, "#{option.to_s}_#{value.to_s}").click
+    find(qt_menu, "#{option.to_s}_#{value.to_s}").click
   end
 
   def start_game
-    find(runner.qt_menu, "start").click
+    find(qt_menu, "start").click
   end
 
   def close_game
-    find(runner.qt_game, "close").click
+    find(qt_game, "close").click
   end
 
   def play_again
-    find(runner.qt_game, "play_again").click
+    find(qt_game, "play_again").click
   end
 
   def get_result_text
-    find(runner.qt_game, "result").text
+    find(qt_game, "result").text
   end
 
   def are_options_visible?
-    runner.qt_menu.visible
+    qt_menu.visible
   end
 
   def is_game_visible?
-    runner.qt_game.visible
+    qt_game.visible
+  end
+
+  def qt_game
+    qt_framework.created_windows.last.root
+  end
+
+  def qt_menu
+    qt_framework.created_windows.first.root
+  end
+
+  let(:qt_framework) do
+    Tictactoe::Gui::QtGui::Widgets::Factory.new
   end
 
   let(:runner) do
-    runner = described_class.new
+    described_class.new(qt_framework)
   end
 
   it 'creates a Qt application' do
@@ -54,6 +67,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'runs a full game between two humans on a 3 by 3 board' do
+    runner
     select(:board, 3)
     select(:x, :human)
     select(:o, :human)
@@ -69,6 +83,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'runs a full game between two humans on a 4 by 4 board' do
+    runner
     select(:board, 4)
     select(:x, :human)
     select(:o, :human)
@@ -86,6 +101,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'runs a full game between two computers on a 3 by 3 board' do
+    runner
     select(:board, 3)
     select(:x, :computer)
     select(:o, :computer)
@@ -100,6 +116,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'hides the options when a game starts running' do
+    runner
     select(:board, 3)
     select(:x, :human)
     select(:o, :human)
@@ -111,6 +128,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'shows the options when playing again' do
+    runner
     select(:board, 3)
     select(:x, :human)
     select(:o, :human)
@@ -130,6 +148,7 @@ RSpec.describe Tictactoe::Gui::Runner, :integration => true, :gui => true do
   end
 
   it 'hides everything after closing the game' do
+    runner
     select(:board, 3)
     select(:x, :human)
     select(:o, :human)

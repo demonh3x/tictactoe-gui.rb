@@ -9,32 +9,18 @@ require 'tictactoe/gui/human_player'
 module Tictactoe
   module Gui
     class Runner
-      def initialize
-        initialize_framework
+      def initialize(framework = QtGui::Widgets::Factory.new)
+        self.framework = framework
         show_windows
       end
 
       def run
-        app.exec
-      end
-
-      def qt_menu
-        widget_factory.created_windows.first.root
-      end
-
-      def qt_game
-        widget_factory.created_windows.last.root
+        framework.start_event_loop
       end
 
       private
+      attr_accessor :framework
       attr_accessor :menu_gui, :game_gui
-
-      attr_accessor :app, :widget_factory
-
-      def initialize_framework
-        self.app = Qt::Application.new(ARGV)
-        self.widget_factory = QtGui::Widgets::Factory.new()
-      end
 
       def show_windows
         create_menu_gui
@@ -42,7 +28,7 @@ module Tictactoe
       end
 
       def create_menu_gui
-        self.menu_gui = QtGui::MenuGui.new(widget_factory)
+        self.menu_gui = QtGui::MenuGui.new(framework)
         menu_gui.on_configured(method(:show_game))
         menu_gui
       end
@@ -62,7 +48,7 @@ module Tictactoe
       end
 
       def create_game_gui(options)
-        self.game_gui = QtGui::GameGui.new(widget_factory)
+        self.game_gui = QtGui::GameGui.new(framework)
         game_gui.set_board_size(options[:board] * options[:board])
         game_gui.on_play_again(method(:show_menu))
         game_gui

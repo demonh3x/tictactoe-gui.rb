@@ -10,6 +10,10 @@ module Tictactoe
     module QtGui
       module Widgets
         class Factory
+          def initialize
+            self.app = Qt::Application.new(ARGV)
+          end
+
           def new_board(cell_count, on_move)
             Board.new(cell_count, on_move) 
           end
@@ -39,6 +43,13 @@ module Tictactoe
           def new_game_options(on_select)
             GameOptions.new(on_select)
           end
+
+          def start_event_loop
+            app.exec
+          end
+
+          private
+          attr_accessor :app
         end
       end
     end
