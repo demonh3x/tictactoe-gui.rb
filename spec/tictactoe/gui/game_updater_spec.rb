@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'tictactoe/gui/game_updater'
 
 module Mock
