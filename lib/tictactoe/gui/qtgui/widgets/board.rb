@@ -7,8 +7,8 @@ module Tictactoe
         class Board
           attr_reader :layout
 
-          def initialize(cell_count, on_move)
-            self.cell_count = cell_count
+          def initialize(side_size, on_move)
+            self.cell_count = side_size * side_size
             self.on_move = on_move
             init
           end

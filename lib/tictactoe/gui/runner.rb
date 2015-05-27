@@ -49,7 +49,7 @@ module Tictactoe
 
       def create_game_gui(options)
         self.game_gui = QtGui::GameGui.new(framework)
-        game_gui.set_board_size(options[:board] * options[:board])
+        game_gui.set_board_size(options[:board])
         game_gui.on_play_again(method(:show_menu))
         game_gui
       end
