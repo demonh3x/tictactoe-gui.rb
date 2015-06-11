@@ -1,5 +1,5 @@
 source :rubygems
-gem "tictactoe-core" , "~> 0.1.1"
+gem "tictactoe-core" , "~> 0.1.2"
 gem "qtbindings"
 
 group :test do

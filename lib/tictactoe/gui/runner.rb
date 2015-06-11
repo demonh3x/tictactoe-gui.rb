@@ -1,5 +1,7 @@
 require 'Qt'
 require 'tictactoe/game'
+require 'tictactoe/players/factory'
+require 'tictactoe/players/perfect_computer'
 require 'tictactoe/gui/game_updater'
 require 'tictactoe/gui/qtgui/game_gui'
 require 'tictactoe/gui/qtgui/menu_gui'
@@ -40,9 +42,8 @@ module Tictactoe
 
       def create_game_window(options)
         game_gui = create_game_gui(options)
-        game = create_game(options)
+        game = create_game(game_gui, options)
 
-        game.register_human_factory(human_factory(game_gui))
         Gui::GameUpdater.new(game, game_gui).receive_ticks_from(game_gui)
 
         game_gui
@@ -55,12 +56,15 @@ module Tictactoe
         game_gui
       end
 
-      def create_game(options)
-        Tictactoe::Game.new(options[:board], options[:x], options[:o])
+      def create_game(game_gui, options)
+        Tictactoe::Game.new(players_factory(game_gui), options[:board], options[:x], options[:o])
       end
 
-      def human_factory(game_gui)
-        lambda{|mark| HumanPlayer.new(mark).receive_moves_from(game_gui)}
+      def players_factory(game_gui)
+        factory = Tictactoe::Players::Factory.new
+        factory.register(:computer, lambda { |mark| Tictactoe::Players::PerfectComputer.new(mark) })
+        factory.register(:human, lambda { |mark| HumanPlayer.new(mark).receive_moves_from(game_gui) })
+        factory
       end
     end
   end
