@@ -17,3 +17,8 @@ namespace :spec do
     add_opts "--color -fd"
   end
 end
+
+desc 'Runs the game'
+task :run do
+  sh 'bin/tictactoe_gui'
+end
