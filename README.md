@@ -15,7 +15,7 @@ This is a [graphical user interface][gui] for [tictactoe-core.rb][core]
 ##### Execution
 * Ruby, from v2.0.0 to 2.2.0 (other versions might work too)
 * [tictactoe-core.rb][core] v0.1.2
-* [qtbindings][qt]
+* [qtbindings][qt] v4.8.x
 
 [qt]: https://github.com/ryanmelt/qtbindings/
 
