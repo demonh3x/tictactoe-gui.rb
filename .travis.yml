@@ -6,6 +6,7 @@ rvm:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+cache: bundler
 script: "rake spec:ci"
 addons:
   code_climate:
